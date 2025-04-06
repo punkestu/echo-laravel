@@ -1,0 +1,26 @@
+name: CD
+run-name: Running production deployment 🚀
+on:
+  push:
+    branches: [main]
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NYAN_HOST }}
+          username: ${{ secrets.NYAN_USERNAME }}
+          key: ${{ secrets.NYAN_SECRET }}
+          port: ${{ secrets.NYAN_PORT }}
+          passphrase: ${{ secrets.NYAN_PASSPHRASE }}
+          script: |
+            cd echo.punkestu.my.id
+            git pull origin main
+            git checkout main
+            composer install
+            php artisan migrate
+            npm install
+            npm run build
