@@ -17,7 +17,7 @@ jobs:
           port: ${{ secrets.NYAN_PORT }}
           passphrase: ${{ secrets.NYAN_PASSPHRASE }}
           script: |
-            cd echo.punkestu.my.id
+            cd repositories/echo-laravel
             git pull origin main
             git checkout main
             composer install
