@@ -16,14 +16,43 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-netral">
+<body class="bg-netral relative">
+    @if (session('alert'))
+        @php
+            $alert = session('alert');
+            $alert['type'] = $alert['type'] ?? 'info';
+            $alert['message'] = $alert['message'] ?? 'Something went wrong';
+            $alert['color'] = 'bg-blue-300/75';
+            if ($alert['type'] == 'success') {
+                $alert['color'] = 'bg-green-300/75';
+            } elseif ($alert['type'] == 'error') {
+                $alert['color'] = 'bg-red-300/75';
+            }
+        @endphp
+        <div class="fixed top-0 right-0 m-4 rounded-md p-4 shadow-lg {{ $alert['color'] }} z-50 flex flex-col gap-1">
+            <button class="text-black self-end text-xs" onclick="this.parentElement.remove()">✖</button>
+            <p>{{ $alert['message'] }}</p>
+        </div>
+    @endif
     <header class="flex items-center justify-between px-4 py-2">
         <a href="/">
             <img src="/images/logo/xlcombine.svg" alt="Logo Echo" class="h-12">
         </a>
         <aside class="flex items-center gap-4">
-            <a href="/catalog" class="underline">Katalog</a>
-            <a href="#auth" class="bg-light rounded-sm px-3 py-1">Masuk / Daftar</a>
+            @auth
+                @if (auth()->user()->isAdmin())
+                    <a href="/dashboard" class="underline">Dashboard</a>
+                @else
+                    <a href="/catalog" class="underline">Katalog</a>
+                    <a href="/cart" class="underline flex relative">Keranjang <span
+                            class="w-3 h-3 rounded-full absolute -right-2 bg-red-500"></span></a>
+                @endif
+                <a href="{{ route('auth.logout') }}" class="bg-red-500 text-white rounded-sm px-3 py-1">Logout</a>
+            @endauth
+            @guest
+                <a href="/catalog" class="underline">Katalog</a>
+                <a href="#auth" class="bg-light rounded-sm px-3 py-1">Masuk / Daftar</a>
+            @endguest
         </aside>
     </header>
     <main class="px-6 py-2">
@@ -108,55 +137,66 @@
                 </div>
             </div>
         </section>
-        <section class="mt-16 flex gap-4" id="auth">
-            <aside class="bg-light rounded-lg p-8 flex-grow">
-                <h3 class="text-2xl font-bold">Daftar</h3>
-                <p class="text-lg text-justify">
-                    Mau booking peralatan outdoor? Join dulu dong!
-                </p>
-                <form action="/auth/register" method="post" class="mt-4" id="register">
-                    @csrf
-                    <div class="flex flex-col gap-2 mb-2">
-                        <label for="name" class="text-lg font-bold">Nama Lengkap</label>
-                        <input type="text" name="name" id="name" class="border border-black rounded-md p-2"
-                            placeholder="Nama Lengkap" required>
-                    </div>
-                    <div class="flex flex-col gap-2 mb-2">
-                        <label for="email" class="text-lg font-bold">Email</label>
-                        <input type="email" name="email" id="email"
-                            class="border border-black rounded-md p-2" placeholder="Email" required>
-                    </div>
-                    <div class="flex flex-col gap-2 mb-2">
-                        <label for="password" class="text-lg font-bold">Password</label>
-                        <input type="password" name="password" id="password"
-                            class="border border-black rounded-md p-2" placeholder="Password" required>
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Daftar</button>
-                </form>
-            </aside>
-            <aside class="bg-light rounded-lg p-8">
-                <h3 class="text-2xl font-bold">Masuk</h3>
-                <p class="text-lg text-justify">
-                    Udah punya akun? Ayo masuk dan booking sekarang!
-                </p>
-                <form action="/auth/login" method="post" class="mt-4" id="login">
-                    @csrf
-                    <div class="flex flex-col gap-2 mb-2">
-                        <label for="email" class="text-lg font-bold">Email</label>
-                        <input type="email" name="email" id="email"
-                            class="border border-black rounded-md p-2" placeholder="Email" required>
-                    </div>
-                    <div class="flex flex-col gap-2 mb-2">
-                        <label for="password" class="text-lg font-bold">Password</label>
-                        <input type="password" name="password" id="password"
-                            class="border border-black rounded-md p-2" placeholder="Password" required>
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Masuk</button>
-                </form>
-            </aside>
-        </section>
+        @guest
+            <section class="mt-16 flex gap-4" id="auth">
+                <aside class="bg-light rounded-lg p-8 flex-grow">
+                    <h3 class="text-2xl font-bold">Daftar</h3>
+                    <p class="text-lg text-justify">
+                        Mau booking peralatan outdoor? Join dulu dong!
+                    </p>
+                    <form action="{{ route('auth.register') }}" method="post" class="mt-4" id="register">
+                        @csrf
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="name" class="text-lg font-bold">Nama Lengkap</label>
+                            <input type="text" name="name" id="name"
+                                class="border border-black rounded-md p-2" placeholder="Nama Lengkap" required>
+                            @if ($errors->has('name'))
+                                <p class="text-red-500 text-sm">{{ $errors->first('name') }}</p>
+                            @endif
+                        </div>
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="email" class="text-lg font-bold">Email</label>
+                            <input type="email" name="email" id="email"
+                                class="border border-black rounded-md p-2" placeholder="Email" required>
+                            @if ($errors->has('email'))
+                                <p class="text-red-500 text-sm">{{ $errors->first('email') }}</p>
+                            @endif
+                        </div>
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="password" class="text-lg font-bold">Password</label>
+                            <input type="password" name="password" id="password"
+                                class="border border-black rounded-md p-2" placeholder="Password" required>
+                            @if ($errors->has('password'))
+                                <p class="text-red-500 text-sm">{{ $errors->first('password') }}</p>
+                            @endif
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Daftar</button>
+                    </form>
+                </aside>
+                <aside class="bg-light rounded-lg p-8">
+                    <h3 class="text-2xl font-bold">Masuk</h3>
+                    <p class="text-lg text-justify">
+                        Udah punya akun? Ayo masuk dan booking sekarang!
+                    </p>
+                    <form action="{{ route('auth.login') }}" method="post" class="mt-4" id="login">
+                        @csrf
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="email" class="text-lg font-bold">Email</label>
+                            <input type="email" name="email" id="email"
+                                class="border border-black rounded-md p-2" placeholder="Email" required>
+                        </div>
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="password" class="text-lg font-bold">Password</label>
+                            <input type="password" name="password" id="password"
+                                class="border border-black rounded-md p-2" placeholder="Password" required>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Masuk</button>
+                    </form>
+                </aside>
+            </section>
+        @endguest
     </main>
     <footer class="mt-16 px-6 py-4 bg-light">
         <div class="flex justify-center items-center gap-4">
