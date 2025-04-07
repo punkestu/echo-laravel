@@ -11,3 +11,23 @@ Route::prefix('auth')->group(function () {
     Route::post('register', [App\Http\Controllers\AuthController::class, 'register'])->name('auth.register');
     Route::get('logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
 });
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'route'])->name('dashboard');
+    Route::prefix("/item")->group(function () {
+        Route::get("/", [App\Http\Controllers\ItemController::class, 'index'])->name('dashboard.item');
+        Route::get("/create", [App\Http\Controllers\ItemController::class, 'create'])->name('dashboard.item.create');
+        Route::post("/store", [App\Http\Controllers\ItemController::class, 'store'])->name('dashboard.item.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\ItemController::class, 'edit'])->name('dashboard.item.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\ItemController::class, 'update'])->name('dashboard.item.update');
+        Route::get("/delete/{id}", [App\Http\Controllers\ItemController::class, 'destroy'])->name('dashboard.item.delete');
+    });
+    Route::prefix('/item-type')->group(function () {
+        Route::get('/', [App\Http\Controllers\ItemTypeController::class, 'index'])->name('dashboard.item-type');
+        Route::get('/create', [App\Http\Controllers\ItemTypeController::class, 'create'])->name('dashboard.item-type.create');
+        Route::post('/store', [App\Http\Controllers\ItemTypeController::class, 'store'])->name('dashboard.item-type.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\ItemTypeController::class, 'edit'])->name('dashboard.item-type.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\ItemTypeController::class, 'update'])->name('dashboard.item-type.update');
+        Route::get('/delete/{id}', [App\Http\Controllers\ItemTypeController::class, 'destroy'])->name('dashboard.item-type.delete');
+    });
+});
