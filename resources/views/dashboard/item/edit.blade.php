@@ -53,7 +53,7 @@
                         @foreach ($item->itemTypes as $type)
                             <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
                                 <span>{{ $itemtypes->find($type)->name }}</span>
-                                <input type="hidden" name="types[]" value="{{ $type }}">
+                                <input type="hidden" name="types[]" value="{{ $type->id }}">
                                 <button type="button" class="text-red-500" onclick="this.parentElement.remove()">x</button>
                             </div>
                         @endforeach
