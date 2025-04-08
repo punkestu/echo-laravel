@@ -1,9 +1,9 @@
 @extends('dashboard.layout')
 @section('content')
-    <section class="flex justify-between items-start mb-2">
+    <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
             <h3 class="text-xl font-bold">Ubah Tipe Item</h3>
-            <p class="text-sm text-justify">
+            <p class="text-sm text-justify hidden md:block">
                 Ubah tipe item ke dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
             </p>
         </div>

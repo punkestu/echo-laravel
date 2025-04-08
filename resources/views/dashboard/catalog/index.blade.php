@@ -1,9 +1,9 @@
 @extends('dashboard.layout')
 @section('content')
-    <section class="flex justify-between items-start mb-2">
+    <section class="flex flex-wrap justify-between items-start gap-2 mb-2">
         <div>
             <h3 class="text-xl font-bold">Katalog</h3>
-            <p class="text-sm text-justify">
+            <p class="text-sm text-justify hidden md:block">
                 Daftar item atau paket yang tersedia di Echo. Item-item ini dapat disewa oleh pengguna.
             </p>
         </div>
@@ -12,7 +12,7 @@
     </section>
     <section class="mb-2">
         <form action="{{ route('dashboard.catalog') }}" method="GET" class="flex gap-2">
-            <select name="filter_type" id="filter_type" class="border border-gray-300 rounded-md px-2 py-1">
+            <select name="filter_type" id="filter_type" class="text-sm hidden md:block border border-gray-300 rounded-md px-2 py-1">
                 <option value="">Semua Tipe</option>
                 @foreach ($itemtypes as $itemtype)
                     <option value="{{ $itemtype->id }}" {{ request('filter_type') == $itemtype->id ? 'selected' : '' }}>
@@ -20,12 +20,12 @@
                 @endforeach
             </select>
             <input type="text" name="search" id="search" placeholder="Cari katalog..."
-                class="border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
-            <button type="submit" class="bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
+                class="text-sm border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
+            <button type="submit" class="text-sm bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
         </form>
     </section>
     <section class="overflow-auto w-full max-h-[62vh]">
-        <table class="table-auto overflow-scroll w-[100vw]">
+        <table class="table-auto overflow-scroll w-[300vw] md:w-[150vw]">
             <thead>
                 <tr>
                     <th class="border-b py-1 px-2 w-1">ID</th>

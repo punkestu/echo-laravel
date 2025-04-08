@@ -1,9 +1,9 @@
 @extends('dashboard.layout')
 @section('content')
-    <section class="flex justify-between items-start mb-2">
+    <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
             <h3 class="text-xl font-bold">Tipe Item</h3>
-            <p class="text-sm text-justify">
+            <p class="text-sm text-justify hidden md:block">
                 Master data tipe item yang digunakan untuk mengelompokkan item-item yang ada di dalam sistem.
             </p>
         </div>
@@ -11,7 +11,7 @@
             Baru</a>
     </section>
     <section class="overflow-auto w-full max-h-[62vh]">
-        <table class="table-auto overflow-scroll w-[100vw]">
+        <table class="table-auto overflow-scroll w-[150vw] md:w-[100vw]">
             <thead>
                 <tr>
                     <th class="border-b py-1 px-2 w-1">ID</th>

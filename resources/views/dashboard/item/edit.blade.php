@@ -1,9 +1,9 @@
 @extends('dashboard.layout')
 @section('content')
-    <section class="flex justify-between items-start mb-2">
+    <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
             <h3 class="text-xl font-bold">Ubah Item</h3>
-            <p class="text-sm text-justify">
+            <p class="text-sm text-justify hidden md:block">
                 Ubah item ke dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
             </p>
         </div>
@@ -33,7 +33,7 @@
                 <label for="type" class="block text-sm font-medium text-gray-700">Tipe Item</label>
                 <div id="type-list" class="flex gap-2">
                     @foreach ($item->itemTypes as $type)
-                        <div class="bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                        <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
                             <span>{{ $type->name }}</span>
                             <input type="hidden" name="types[]" value="{{ $type->id }}">
                             <button type="button" class="text-red-500" onclick="this.parentElement.remove()">x</button>
@@ -48,7 +48,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-4 flex gap-4">
+            <div class="mb-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="flex-grow">
                     <label for="qty" class="block text-sm font-medium text-gray-700">Jumlah Total</label>
                     <input type="number" name="qty" id="qty" required
@@ -100,7 +100,7 @@
             const selectedType = event.target.value;
             const selectedTypeText = event.target.options[event.target.selectedIndex].text;
             document.querySelector("#type-list").insertAdjacentHTML('beforeend', `
-                <div class="bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
                     <span>${selectedTypeText}</span>
                     <input type="hidden" name="types[]" value="${selectedType}">
                     <button type="button" class="text-red-500" onclick="this.parentElement.remove()">x</button>

@@ -1,9 +1,9 @@
 @extends('dashboard.layout')
 @section('content')
-    <section class="flex justify-between items-start mb-2">
+    <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
             <h3 class="text-xl font-bold">Tambah Katalog Baru</h3>
-            <p class="text-sm text-justify">
+            <p class="text-sm text-justify hidden md:block">
                 Tambahkan katalog baru ke dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
             </p>
         </div>
@@ -61,7 +61,7 @@
             const selectedItem = event.target.value;
             const selectedItemText = event.target.options[event.target.selectedIndex].text;
             document.querySelector("#item-list").insertAdjacentHTML('beforeend', `
-                <div class="bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
                     <span>${selectedItemText}</span>
                     <input type="hidden" name="items[]" value="${selectedItem}"> X
                     <input type="number" name="qty[]" class="bg-white text-black px-2 py-1 w-14 rounded-md">

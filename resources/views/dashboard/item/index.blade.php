@@ -3,7 +3,7 @@
     <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
             <h3 class="text-lg md:text-xl font-bold">Gudang</h3>
-            <p class="text-sm text-justify">
+            <p class="hidden md:block text-sm text-justify">
                 Daftar item yang tersedia untuk disewa. Anda dapat menambah, mengedit, dan menghapus item di sini.
             </p>
         </div>
@@ -12,7 +12,7 @@
     </section>
     <section class="mb-2">
         <form action="{{ route('dashboard.item') }}" method="GET" class="flex gap-2">
-            <select name="filter_type" id="filter_type" class="text-sm md:text-lg border border-gray-300 rounded-md px-2 py-1">
+            <select name="filter_type" id="filter_type" class="text-sm border border-gray-300 rounded-md px-2 py-1 hidden md:block">
                 <option value="">Semua Tipe</option>
                 @foreach ($itemtypes as $itemtype)
                     <option value="{{ $itemtype->id }}" {{ request('filter_type') == $itemtype->id ? 'selected' : '' }}>
@@ -20,18 +20,18 @@
                 @endforeach
             </select>
             <input type="text" name="search" id="search" placeholder="Cari item..."
-                class="text-sm md:text-lg border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
-            <button type="submit" class="text-sm md:text-lg bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
+                class="text-sm border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
+            <button type="submit" class="text-sm bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
         </form>
     </section>
     <section class="overflow-auto w-full max-h-[62vh]">
-        <table class="table-auto overflow-scroll w-[400vw] md:w-[100vw]">
+        <table class="table-auto overflow-scroll w-[400vw] md:w-[150vw]">
             <thead>
                 <tr>
                     <th class="border-b py-1 px-2 w-1">ID</th>
-                    <th class="border-b py-1 px-2 w-36 md:w-28 text-left">Nama</th>
+                    <th class="border-b py-1 px-2 w-28 text-left">Nama</th>
                     <th class="border-b py-1 px-2 w-1 md:w-28 text-left">Foto</th>
-                    <th class="border-b py-1 px-2 w-28 text-left">Deskripsi</th>
+                    <th class="border-b py-1 px-2 w-36 md:w-28 text-left">Deskripsi</th>
                     <th class="border-b py-1 px-2 w-36">Tipe</th>
                     <th class="border-b py-1 px-2 w-1">Jumlah Total</th>
                     <th class="border-b py-1 px-2 w-28">Jumlah <br> Bagus / Rusak</th>
