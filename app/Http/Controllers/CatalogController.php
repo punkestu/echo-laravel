@@ -9,6 +9,33 @@ use Illuminate\Http\Request;
 
 class CatalogController
 {
+    public function user_index()
+    {
+        $search = request('search');
+        $filter_type = request('filter_type');
+        $catalogs = Catalog::with(['catalogItems' => function ($query) {
+            $query->with('item');
+        }]);
+        if ($filter_type) {
+            $catalogs = $catalogs->whereHas('catalogItems.item.itemTypes', function ($query) use ($filter_type) {
+                $query->where('item_types.id', $filter_type);
+            });
+        }
+        if ($search) {
+            $catalogs = $catalogs->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        }
+        $catalogs = $catalogs->get();
+        $itemtypes = ItemType::all();
+        return view('user.catalog', [
+            'catalogs' => $catalogs,
+            'itemtypes' => $itemtypes,
+            'search' => $search,
+            'filter' => [
+                'type' => $filter_type,
+            ],
+        ]);
+    }
     public function index()
     {
         $search = request('search');
@@ -31,6 +58,9 @@ class CatalogController
             'catalogs' => $catalogs,
             'itemtypes' => $itemtypes,
             'search' => $search,
+            'filter' => [
+                'type' => $filter_type,
+            ],
         ]);
     }
 

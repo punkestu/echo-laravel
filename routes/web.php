@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', function () {
+    return redirect("/");
+})->name('home');
+Route::get("/login", function () {
+    return redirect("/#auth");
+})->name("login");
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [App\Http\Controllers\AuthController::class, 'login'])->name('auth.login');
@@ -12,7 +18,12 @@ Route::prefix('auth')->group(function () {
     Route::get('logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
 });
 
-Route::prefix('dashboard')->group(function () {
+Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');
+
+Route::group(["prefix" => "/dashboard", "middleware" => [
+    'auth',
+    'admin'
+]], function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'route'])->name('dashboard');
     Route::prefix("/catalog")->group(function () {
         Route::get("/", [App\Http\Controllers\CatalogController::class, 'index'])->name('dashboard.catalog');
