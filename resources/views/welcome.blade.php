@@ -111,24 +111,24 @@
                     <form action="{{ route('auth.register') }}" method="post" class="mt-4" id="register">
                         @csrf
                         <div class="flex flex-col gap-2 mb-2">
-                            <label for="name" class="text-sm md:text-lg font-bold">Nama Lengkap</label>
-                            <input type="text" name="name" id="name"
+                            <label for="register-name" class="text-sm md:text-lg font-bold">Nama Lengkap</label>
+                            <input type="text" name="name" id="register-name"
                                 class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Nama Lengkap" required>
                             @if ($errors->has('name'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('name') }}</p>
                             @endif
                         </div>
                         <div class="flex flex-col gap-2 mb-2">
-                            <label for="email" class="text-sm md:text-lg font-bold">Email</label>
-                            <input type="email" name="email" id="email"
+                            <label for="register-email" class="text-sm md:text-lg font-bold">Email</label>
+                            <input type="email" name="email" id="register-email"
                                 class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email" required>
                             @if ($errors->has('email'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('email') }}</p>
                             @endif
                         </div>
                         <div class="flex flex-col gap-2 mb-2">
-                            <label for="password" class="text-sm md:text-lg font-bold">Password</label>
-                            <input type="password" name="password" id="password"
+                            <label for="register-password" class="text-sm md:text-lg font-bold">Password</label>
+                            <input type="password" name="password" id="register-password"
                                 class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password" required>
                             @if ($errors->has('password'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('password') }}</p>
@@ -146,13 +146,13 @@
                     <form action="{{ route('auth.login') }}" method="post" class="mt-4" id="login">
                         @csrf
                         <div class="flex flex-col gap-2 mb-2">
-                            <label for="email" class="text-sm md:text-lg font-bold">Email</label>
-                            <input type="email" name="email" id="email"
+                            <label for="login-email" class="text-sm md:text-lg font-bold">Email</label>
+                            <input type="email" name="email" id="login-email"
                                 class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email" required>
                         </div>
                         <div class="flex flex-col gap-2 mb-2">
-                            <label for="password" class="text-sm md:text-lg font-bold">Password</label>
-                            <input type="password" name="password" id="password"
+                            <label for="login-password" class="text-sm md:text-lg font-bold">Password</label>
+                            <input type="password" name="password" id="login-password"
                                 class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password" required>
                         </div>
                         <button type="submit"
