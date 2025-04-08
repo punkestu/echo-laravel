@@ -95,7 +95,7 @@
                     </li>
                 </ul>
                 <div class="flex">
-                    <a href="/images/aturan-main.png" target="_blank"
+                    <a href="/Echo - Catalog.pdf" target="_blank"
                         class="text-sm md:text-lg bg-light px-4 py-2 rounded-sm flex justify-center items-center gap-2 w-full md:w-auto">Baca Lebih Lengkap di Sini
                         <img src="/icons/share.png" alt="share" class="h-6"></a>
                 </div>
