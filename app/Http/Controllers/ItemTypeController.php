@@ -21,6 +21,12 @@ class ItemTypeController
     public function edit($id)
     {
         $itemtype = ItemType::find($id);
+        if (!$itemtype) {
+            return redirect()->route('dashboard.item-type')->with('alert', [
+                'type' => 'error',
+                'message' => 'Tipe tidak ditemukan',
+            ]);
+        }
         return view('dashboard.item-type.edit', ['itemtype' => $itemtype]);
     }
     public function store(Request $request)
@@ -41,7 +47,10 @@ class ItemTypeController
             'name' => $request->name,
         ]);
 
-        return redirect()->route('dashboard.item-type')->with('success', 'Tipe berhasil ditambahkan');
+        return redirect()->route('dashboard.item-type')->with('alert', [
+            'type' => 'success',
+            'message' => 'Tipe berhasil ditambahkan',
+        ]);
     }
     public function update(Request $request, $id)
     {
@@ -58,20 +67,35 @@ class ItemTypeController
         }
 
         $itemtype = ItemType::find($id);
+        if (!$itemtype) {
+            return redirect()->route('dashboard.item-type')->with('alert', [
+                'type' => 'error',
+                'message' => 'Tipe tidak ditemukan',
+            ]);
+        }
         $itemtype->update([
             'name' => $request->name,
         ]);
 
-        return redirect()->route('dashboard.item-type')->with('success', 'Tipe berhasil diubah');
+        return redirect()->route('dashboard.item-type')->with('alert', [
+            'type' => 'success',
+            'message' => 'Tipe berhasil diubah',
+        ]);
     }
     public function destroy($id)
     {
         $itemtype = ItemType::find($id);
         if ($itemtype) {
             $itemtype->delete();
-            return redirect()->route('dashboard.item-type')->with('success', 'Tipe berhasil dihapus');
+            return redirect()->route('dashboard.item-type')->with('alert', [
+                'type' => 'success',
+                'message' => 'Tipe berhasil dihapus',
+            ]);
         } else {
-            return redirect()->route('dashboard.item-type')->with('error', 'Tipe tidak ditemukan');
+            return redirect()->route('dashboard.item-type')->with('alert', [
+                'type' => 'error',
+                'message' => 'Tipe tidak ditemukan',
+            ]);
         }
     }
 }

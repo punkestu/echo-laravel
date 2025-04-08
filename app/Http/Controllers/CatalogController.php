@@ -6,6 +6,7 @@ use App\Models\Catalog;
 use App\Models\Item;
 use App\Models\ItemType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController
 {
@@ -79,6 +80,12 @@ class CatalogController
         $catalog = Catalog::with(['catalogItems' => function ($query) {
             $query->with('item');
         }])->find($id);
+        if (!$catalog) {
+            return redirect()->route('dashboard.catalog')->with('alert', [
+                'type' => 'error',
+                'message' => 'Katalog tidak ditemukan!',
+            ]);
+        }
         $items = Item::all();
         return view('dashboard.catalog.edit', [
             'catalog' => $catalog,
@@ -123,6 +130,7 @@ class CatalogController
             ])->withErrors($validation)->withInput();
         }
 
+        DB::beginTransaction();
         $newcatalog = new Catalog();
         $newcatalog->name = $request->name;
         $newcatalog->description = $request->description;
@@ -134,6 +142,7 @@ class CatalogController
         foreach ($request->items as $item) {
             $newcatalog->items()->attach($item['id'], ['qty' => $item['qty']]);
         }
+        DB::commit();
 
         return redirect()->route('dashboard.catalog')->with('alert', [
             'type' => 'success',
@@ -178,7 +187,14 @@ class CatalogController
             ])->withErrors($validation)->withInput();
         }
 
+        DB::beginTransaction();
         $catalog = Catalog::find($id);
+        if (!$catalog) {
+            return redirect()->route('dashboard.catalog')->with('alert', [
+                'type' => 'error',
+                'message' => 'Katalog tidak ditemukan!',
+            ]);
+        }
         $catalog->name = $request->name;
         $catalog->description = $request->description;
         $catalog->price = $request->price;
@@ -191,6 +207,7 @@ class CatalogController
             return $carry;
         }, []);
         $catalog->items()->sync($items);
+        DB::commit();
 
         return redirect()->route('dashboard.catalog')->with('alert', [
             'type' => 'success',

@@ -45,8 +45,14 @@ class ItemController
 
     public function edit($id)
     {
-        $itemtypes = ItemType::all();
         $item = Item::with('itemTypes')->find($id);
+        if (!$item) {
+            return redirect()->route('dashboard.item')->with('alert', [
+                'type' => 'error',
+                'message' => 'Item tidak ditemukan',
+            ]);
+        }
+        $itemtypes = ItemType::all();
         return view('dashboard.item.edit', ['item' => $item, 'itemtypes' => $itemtypes]);
     }
 
@@ -182,6 +188,12 @@ class ItemController
         DB::beginTransaction();
         // Logic to update the item
         $item = Item::find($id);
+        if (!$item) {
+            return redirect()->route('dashboard.item')->with('alert', [
+                'type' => 'error',
+                'message' => 'Item tidak ditemukan',
+            ]);
+        }
         $item->name = $request->name;
         $item->description = $request->description;
         if ($request->hasFile('thumb')) {
@@ -208,6 +220,12 @@ class ItemController
         DB::beginTransaction();
         // Logic to delete the item
         $item = Item::find($id);
+        if (!$item) {
+            return redirect()->route('dashboard.item')->with('alert', [
+                'type' => 'error',
+                'message' => 'Item tidak ditemukan',
+            ]);
+        }
         if ($item) {
             $item->itemTypes()->detach();
             $item->delete();
