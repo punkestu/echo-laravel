@@ -12,7 +12,8 @@
     </section>
     <section class="mb-2">
         <form action="{{ route('dashboard.item') }}" method="GET" class="flex gap-2">
-            <select name="filter_type" id="filter_type" class="text-sm border border-gray-300 rounded-md px-2 py-1 hidden md:block">
+            <select name="filter_type" id="filter_type"
+                class="text-sm border border-gray-300 rounded-md px-2 py-1 hidden md:block">
                 <option value="">Semua Tipe</option>
                 @foreach ($itemtypes as $itemtype)
                     <option value="{{ $itemtype->id }}" {{ request('filter_type') == $itemtype->id ? 'selected' : '' }}>
@@ -47,7 +48,7 @@
                         <td class="px-2 pt-1 pb-2 text-center align-top">{{ $item->id }}</td>
                         <td class="px-2 pt-1 pb-2 align-top">{{ $item->name }}</td>
                         <td class="px-2 pt-1 pb-2 align-top">
-                            <img src="/storage/{{ $item->thumb_url }}" alt="Logo Echo" class="h-[48px]">
+                            <img src="{{ $item->thumb_url ? ('/storage/' . $item->thumb_url) : '/images/logo/normallight.svg' }}" alt="Foto item" class="h-[48px]">
                         </td>
                         <td class="px-2 pt-1 pb-2 align-top" title="{{ $item->description }}">
                             {{ strlen($item->description) > 30 ? substr($item->description, 0, 30 - 3) . '...' : $item->description }}
@@ -71,8 +72,8 @@
                             <div class="flex justify-center gap-2">
                                 <a href="{{ route('dashboard.item.edit', $item->id) }}"
                                     class="bg-blue-500 text-white rounded-sm px-3 py-1">Edit</a>
-                                <a href="{{ route('dashboard.item.delete', $item->id) }}"
-                                    class="bg-red-500 text-white rounded-sm px-3 py-1">Hapus</a>
+                                <button onclick="toggleModal('delete-item-modal', setDeleteUrl('{{ route('dashboard.item.delete', $item->id) }}'))"
+                                    class="bg-red-500 text-white rounded-sm px-3 py-1">Hapus</button>
                             </div>
                         </td>
                     </tr>
@@ -86,4 +87,27 @@
             </div>
         @endif
     </section>
+    <div id="delete-item-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('delete-item-modal')"></button>
+        <div class="bg-white rounded-md shadow-lg mx-4 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
+            <div class="flex flex-col items-center mb-2">
+                <p>Yakin ingin hapus item ini?</p>
+            </div>
+            <section class="flex justify-center gap-2">
+                <a href=""
+                    class="bg-red-500 text-white px-3 py-1 rounded-md">Iya</a>
+                <button onclick="closeModal('delete-item-modal')"
+                    class="bg-blue-500 text-white px-3 py-1 rounded-md">Tidak</button>
+            </section>
+        </div>
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        function setDeleteUrl(url) {
+            return () => {
+                document.getElementById('delete-item-modal').querySelector('a').href = url;
+            }
+        }
+    </script>
 @endsection

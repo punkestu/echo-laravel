@@ -33,8 +33,8 @@
                     onclick="toggleModal('detail-catalog-modal', setDetailCatalog({{ $item->id }}, '{{ $item->name }}', {{ $item->price }}, '{{ $item->description }}', '/storage/{{ $item->thumb_url }}', {{ $item->catalogItems }}))"
                     class="bg-white shadow-md rounded-lg p-4" title="{{ $item->description }}"
                     popovertarget='detail-catalog'>
-                    <img src="/storage/{{ $item->thumb_url }}" alt="{{ $item->name }}"
-                        class="w-full h-56 object-cover rounded-t-lg">
+                    <img src="{{ $item->thumb_url ? '/storage/' . $item->thumb_url : '/images/logo/normallight.svg' }}"
+                        alt="{{ $item->name }}" class="w-full h-56 object-cover rounded-t-lg">
                     <h4 class="text-xl font-bold mt-2">{{ $item->name }}</h4>
                     <p class="text-gray-600 mt-1">Rp. {{ number_format($item->price, 0, ',', '.') }} / Hari</p>
                 </button>
@@ -49,7 +49,7 @@
                     class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
             </section>
             <div class="flex flex-col items-center">
-                <img id="detail-catalog-image" src="" class="w-full h-56 object-cover rounded-t-lg mb-4">
+                <img id="detail-catalog-image" src="" class="w-full h-56 object-contain rounded-t-lg mb-4">
                 <h4 id="detail-catalog-name" class="text-xl font-bold mt-2"></h4>
                 <p id="detail-catalog-price" class="text-gray-600 mt-1"></p>
                 <p id="detail-catalog-description" class="text-gray-600 mt-1 text-center"></p>
@@ -58,45 +58,27 @@
                 </div>
             </div>
         </div>
-    @endsection
-    @section('scripts')
-        <script>
-            function setDetailCatalog(id, name, price, description, image, items) {
-                return () => {
-                    document.getElementById('detail-catalog-name').innerText = name;
-                    document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
-                        ' / Hari';
-                    document.getElementById('detail-catalog-description').innerText = description;
-                    document.getElementById('detail-catalog-image').src = image;
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        function setDetailCatalog(id, name, price, description, image, items) {
+            return () => {
+                document.getElementById('detail-catalog-name').innerText = name;
+                document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
+                    ' / Hari';
+                document.getElementById('detail-catalog-description').innerText = description;
+                document.getElementById('detail-catalog-image').src = image != "/storage/" ? image : '/images/logo/normallight.svg';
 
-                    const itemsContainer = document.getElementById('detail-catalog-items');
-                    itemsContainer.innerHTML = '';
-                    items.forEach(item => {
-                        const itemElement = document.createElement('span');
-                        itemElement.className = 'bg-blue-400 text-white rounded-full px-3 py-1';
-                        itemElement.innerText = item.item.name + ' x ' + item.qty;
-                        itemsContainer.appendChild(itemElement);
-                    });
-                }
+                const itemsContainer = document.getElementById('detail-catalog-items');
+                itemsContainer.innerHTML = '';
+                items.forEach(item => {
+                    const itemElement = document.createElement('span');
+                    itemElement.className = 'bg-blue-400 text-white rounded-full px-3 py-1';
+                    itemElement.innerText = item.item.name + ' x ' + item.qty;
+                    itemsContainer.appendChild(itemElement);
+                });
             }
-        </script>
-        <script>
-            function toggleModal(idmodal, callback) {
-                const modal = document.getElementById(idmodal);
-                modal.classList.toggle('hidden');
-                modal.classList.toggle('flex');
-                if (callback) {
-                    callback();
-                }
-            }
-
-            function closeModal(idmodal, callback) {
-                const modal = document.getElementById(idmodal);
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                if (callback) {
-                    callback();
-                }
-            }
-        </script>
-    @endsection
+        }
+    </script>
+@endsection
