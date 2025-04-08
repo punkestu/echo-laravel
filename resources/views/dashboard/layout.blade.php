@@ -20,12 +20,13 @@
 <body class="bg-netral relative">
     @include('includes.header')
     <div class="flex gap-4 px-4 h-[85vh] mt-4 overflow-y-auto">
-        <nav class="w-1/6 flex flex-col gap-2 p-4 bg-light rounded-md">
+        <nav class="w-[15%] flex flex-col gap-2 p-4 bg-light rounded-md">
             <h3 class="font-bold text-xl">Main Menu</h3>
+            <a class="underline" href="{{ route('dashboard.catalog') }}">Katalog</a>
             <a class="underline" href="{{ route('dashboard.item') }}">Gudang</a>
             <a class="underline" href="{{ route('dashboard.item-type') }}">Tipe Item</a>
         </nav>
-        <main class="flex-grow border p-4 rounded-md h-full overflow-y-auto">
+        <main class="w-[85%] border p-4 rounded-md h-full overflow-y-auto">
             @yield('content')
         </main>
     </div>

@@ -96,7 +96,7 @@
                 </a>
                 <a href="/catalog?filter_type=kompor">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center gap-2">
-                        <img src="/images/logo/echo.svg" alt="Logo Echo" class="h-48">
+                        <img src="/images/illustration/kompor.png" alt="Kompor" class="h-48">
                         <h4 class="text-lg font-bold">Kompor</h4>
                     </div>
                 </a>
