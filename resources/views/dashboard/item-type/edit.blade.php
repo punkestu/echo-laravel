@@ -16,10 +16,14 @@
                 <label for="name" class="block text-sm font-medium text-gray-700">Nama Item</label>
                 <input type="text" name="name" id="name" required
                     class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan nama item" value="{{ old('name') ? old('name') : $itemtype->name }}">
+                    placeholder="Masukkan nama item" value="{{ old('name') ?? $itemtype->name }}">
+                @if ($errors->has('name'))
+                    <p class="text-red-500 text-sm">{{ $errors->first('name') }}</p>
+                @endif
             </div>
             <button type="submit"
-                class="bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Simpan Tipe
+                class="bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Simpan
+                Tipe
                 Item</button>
         </form>
     </section>

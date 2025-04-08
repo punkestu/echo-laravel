@@ -94,9 +94,8 @@ class CatalogController
             'thumb' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price' => 'required|numeric|min:0',
             'items' => 'required|array',
-            'items.*' => 'exists:items,id',
-            'qty' => 'required|array',
-            'qty.*' => 'required|integer|min:1',
+            'items.*.id' => 'required|exists:items,id',
+            'items.*.qty' => 'required|integer|min:1',
         ], [
             'name.required' => 'Nama catalog harus diisi.',
             'name.string' => 'Nama catalog harus berupa string.',
@@ -110,12 +109,11 @@ class CatalogController
             'price.min' => 'Harga catalog tidak boleh kurang dari 0.',
             'items.required' => 'Item catalog harus diisi.',
             'items.array' => 'Item catalog harus berupa array.',
-            'items.*.exists' => 'Item catalog tidak valid.',
-            'qty.required' => 'Jumlah item catalog harus diisi.',
-            'qty.array' => 'Jumlah item catalog harus berupa array.',
-            'qty.*.required' => 'Jumlah item catalog harus diisi.',
-            'qty.*.integer' => 'Jumlah item catalog harus berupa angka.',
-            'qty.*.min' => 'Jumlah item catalog tidak boleh kurang dari 1.',
+            'items.*.id.required' => 'ID item catalog harus diisi.',
+            'items.*.id.exists' => 'Item catalog tidak valid.',
+            'items.*.qty.required' => 'Jumlah item catalog harus diisi.',
+            'items.*.qty.integer' => 'Jumlah item catalog harus berupa angka.',
+            'items.*.qty.min' => 'Jumlah item catalog tidak boleh kurang dari 1.',
         ]);
 
         if ($validation->fails()) {
@@ -133,9 +131,8 @@ class CatalogController
             $newcatalog->thumb_url = $request->file('thumb')->store('catalogs', 'public');
         }
         $newcatalog->save();
-        foreach ($request->items as $index => $itemId) {
-            $qty = $request->qty[$index];
-            $newcatalog->items()->attach($itemId, ['qty' => $qty]);
+        foreach ($request->items as $item) {
+            $newcatalog->items()->attach($item['id'], ['qty' => $item['qty']]);
         }
 
         return redirect()->route('dashboard.catalog')->with('alert', [
@@ -152,9 +149,8 @@ class CatalogController
             'thumb' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price' => 'required|numeric|min:0',
             'items' => 'required|array',
-            'items.*' => 'exists:items,id',
-            'qty' => 'required|array',
-            'qty.*' => 'required|integer|min:1',
+            'items.*.id' => 'required|exists:items,id',
+            'items.*.qty' => 'required|integer|min:1',
         ], [
             'name.required' => 'Nama catalog harus diisi.',
             'name.string' => 'Nama catalog harus berupa string.',
@@ -168,12 +164,11 @@ class CatalogController
             'price.min' => 'Harga catalog tidak boleh kurang dari 0.',
             'items.required' => 'Item catalog harus diisi.',
             'items.array' => 'Item catalog harus berupa array.',
-            'items.*.exists' => 'Item catalog tidak valid.',
-            'qty.required' => 'Jumlah item catalog harus diisi.',
-            'qty.array' => 'Jumlah item catalog harus berupa array.',
-            'qty.*.required' => 'Jumlah item catalog harus diisi.',
-            'qty.*.integer' => 'Jumlah item catalog harus berupa angka.',
-            'qty.*.min' => 'Jumlah item catalog tidak boleh kurang dari 1.'
+            'items.*.id.required' => 'ID item catalog harus diisi.',
+            'items.*.id.exists' => 'Item catalog tidak valid.',
+            'items.*.qty.required' => 'Jumlah item catalog harus diisi.',
+            'items.*.qty.integer' => 'Jumlah item catalog harus berupa angka.',
+            'items.*.qty.min' => 'Jumlah item catalog tidak boleh kurang dari 1.',
         ]);
 
         if ($validation->fails()) {
@@ -191,10 +186,11 @@ class CatalogController
             $catalog->thumb_url = $request->file('thumb')->store('catalogs', 'public');
         }
         $catalog->save();
-        foreach ($request->items as $index => $itemId) {
-            $qty = $request->qty[$index];
-            $catalog->items()->syncWithoutDetaching([$itemId => ['qty' => $qty]]);
-        }
+        $items = array_reduce($request->items, function ($carry, $item) {
+            $carry[$item['id']] = ['qty' => $item['qty']];
+            return $carry;
+        }, []);
+        $catalog->items()->sync($items);
 
         return redirect()->route('dashboard.catalog')->with('alert', [
             'type' => 'success',

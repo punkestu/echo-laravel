@@ -18,6 +18,7 @@
 </head>
 
 <body class="bg-netral relative">
+    @include('includes.alert')
     @include('includes.header')
     @php
         $nav = [
