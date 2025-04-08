@@ -28,8 +28,10 @@
         @endif
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($catalogs as $item)
-                <button onclick="toggleModal('detail-catalog-modal')" class="bg-white shadow-md rounded-lg p-4"
-                    title="{{ $item->description }}" popovertarget='detail-catalog'>
+                <button
+                    onclick="toggleModal('detail-catalog-modal', setDetailCatalog({{ $item->id }}, '{{ $item->name }}', {{ $item->price }}, '{{ $item->description }}', '/storage/{{ $item->thumb_url }}', {{ $item->catalogItems }}))"
+                    class="bg-white shadow-md rounded-lg p-4" title="{{ $item->description }}"
+                    popovertarget='detail-catalog'>
                     <img src="/storage/{{ $item->thumb_url }}" alt="{{ $item->name }}"
                         class="w-full h-56 object-cover rounded-t-lg">
                     <h4 class="text-xl font-bold mt-2">{{ $item->name }}</h4>
@@ -42,35 +44,59 @@
         <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('detail-catalog-modal')"></button>
         <div class="bg-white rounded-md shadow-lg w-96 max-h-[80vh] overflow-y-auto p-6 relative">
             <section class="flex justify-end mb-2">
-                <button onclick="closeModal('detail-catalog-modal')" class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
+                <button onclick="closeModal('detail-catalog-modal')"
+                    class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
             </section>
             <div class="flex flex-col items-center">
-                <img src="/storage/{{ $item->thumb_url }}" alt="{{ $item->name }}"
-                    class="w-full h-56 object-cover rounded-t-lg mb-4">
-                <h4 class="text-xl font-bold mt-2">{{ $item->name }}</h4>
-                <p class="text-gray-600 mt-1">Rp. {{ number_format($item->price, 0, ',', '.') }} / Hari</p>
-                <p class="text-gray-600 mt-1 text-center">{{ $item->description }}</p>
-                <div class="flex justify-center flex-wrap gap-2 mt-4">
-                    @foreach ($item->catalogItems as $citem)
-                        <span class="bg-blue-400 text-white rounded-full px-3 py-1">{{ $citem->item->name }} x
-                            {{ $citem->qty }}</span>
-                    @endforeach
+                <img id="detail-catalog-image" src="" class="w-full h-56 object-cover rounded-t-lg mb-4">
+                <h4 id="detail-catalog-name" class="text-xl font-bold mt-2"></h4>
+                <p id="detail-catalog-price" class="text-gray-600 mt-1"></p>
+                <p id="detail-catalog-description" class="text-gray-600 mt-1 text-center"></p>
+                <div id="detail-catalog-items" class="flex justify-center flex-wrap gap-2 mt-4">
+                    {{-- <span class="bg-blue-400 text-white rounded-full px-3 py-1">{{ $citem->item->name }} x
+                        {{ $citem->qty }}</span> --}}
                 </div>
+            </div>
         </div>
-    </div>
-@endsection
-@section('scripts')
-    <script>
-        function toggleModal(idmodal) {
-            const modal = document.getElementById(idmodal);
-            modal.classList.toggle('hidden');
-            modal.classList.toggle('flex');
-        }
+    @endsection
+    @section('scripts')
+        <script>
+            function setDetailCatalog(id, name, price, description, image, items) {
+                return () => {
+                    document.getElementById('detail-catalog-name').innerText = name;
+                    document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
+                        ' / Hari';
+                    document.getElementById('detail-catalog-description').innerText = description;
+                    document.getElementById('detail-catalog-image').src = image;
 
-        function closeModal(idmodal) {
-            const modal = document.getElementById(idmodal);
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    </script>
-@endsection
+                    const itemsContainer = document.getElementById('detail-catalog-items');
+                    itemsContainer.innerHTML = '';
+                    items.forEach(item => {
+                        const itemElement = document.createElement('span');
+                        itemElement.className = 'bg-blue-400 text-white rounded-full px-3 py-1';
+                        itemElement.innerText = item.item.name + ' x ' + item.qty;
+                        itemsContainer.appendChild(itemElement);
+                    });
+                }
+            }
+        </script>
+        <script>
+            function toggleModal(idmodal, callback) {
+                const modal = document.getElementById(idmodal);
+                modal.classList.toggle('hidden');
+                modal.classList.toggle('flex');
+                if (callback) {
+                    callback();
+                }
+            }
+
+            function closeModal(idmodal, callback) {
+                const modal = document.getElementById(idmodal);
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (callback) {
+                    callback();
+                }
+            }
+        </script>
+    @endsection
