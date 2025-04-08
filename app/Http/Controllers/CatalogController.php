@@ -22,8 +22,10 @@ class CatalogController
             });
         }
         if ($search) {
-            $catalogs = $catalogs->where('name', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
+            $catalogs = $catalogs->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
         $catalogs = $catalogs->get();
         $itemtypes = ItemType::all();

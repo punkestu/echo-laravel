@@ -7,8 +7,9 @@
         </p>
     </section>
     <section class="mb-2">
-        <form action="{{ route('catalog') }}" method="GET" class="flex gap-2">
-            <select name="filter_type" id="filter_type" class="text-sm md:text-lg border border-gray-300 rounded-md px-2 py-1">
+        <form id="filter-form" action="{{ route('catalog') }}" method="GET" class="flex gap-2">
+            <select onchange="document.querySelector('#filter-form').submit()" name="filter_type" id="filter_type"
+                class="text-sm border border-gray-300 rounded-md px-2 py-1">
                 <option value="">Semua Tipe</option>
                 @foreach ($itemtypes as $itemtype)
                     <option value="{{ $itemtype->id }}" {{ request('filter_type') == $itemtype->id ? 'selected' : '' }}>
@@ -16,8 +17,8 @@
                 @endforeach
             </select>
             <input type="text" name="search" id="search" placeholder="Cari katalog..."
-                class="text-sm md:text-lg border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
-            <button type="submit" class="text-sm md:text-lg bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
+                class="text-sm border border-gray-300 rounded-md px-2 py-1 w-full" value="{{ $search }}">
+            <button type="submit" class="text-sm bg-blue-500 text-white rounded-md px-3 py-1">Cari</button>
         </form>
     </section>
     <section>
@@ -26,7 +27,7 @@
                 <p class="text-lg text-gray-500">Tidak ada katalog yang ditemukan.</p>
             </div>
         @endif
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
             @foreach ($catalogs as $item)
                 <button
                     onclick="toggleModal('detail-catalog-modal', setDetailCatalog({{ $item->id }}, '{{ $item->name }}', {{ $item->price }}, '{{ $item->description }}', '/storage/{{ $item->thumb_url }}', {{ $item->catalogItems }}))"
@@ -42,7 +43,7 @@
     </section>
     <div id="detail-catalog-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
         <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('detail-catalog-modal')"></button>
-        <div class="bg-white rounded-md shadow-lg w-96 max-h-[80vh] overflow-y-auto p-6 relative">
+        <div class="bg-white rounded-md shadow-lg mx-4 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
             <section class="flex justify-end mb-2">
                 <button onclick="closeModal('detail-catalog-modal')"
                     class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
@@ -53,8 +54,7 @@
                 <p id="detail-catalog-price" class="text-gray-600 mt-1"></p>
                 <p id="detail-catalog-description" class="text-gray-600 mt-1 text-center"></p>
                 <div id="detail-catalog-items" class="flex justify-center flex-wrap gap-2 mt-4">
-                    {{-- <span class="bg-blue-400 text-white rounded-full px-3 py-1">{{ $citem->item->name }} x
-                        {{ $citem->qty }}</span> --}}
+                    {{-- <span class="bg-blue-400 text-white rounded-full px-3 py-1">name x qty</span> --}}
                 </div>
             </div>
         </div>
