@@ -45,6 +45,7 @@
             @yield('content')
         </main>
     </div>
+    @include('includes.footer')
     @yield('scripts')
 </body>
 

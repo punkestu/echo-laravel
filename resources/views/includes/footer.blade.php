@@ -6,8 +6,9 @@
             <p class="text-sm md:text-lg text-justify mb-2">Gema Petualangan Dimulai di Sini</p>
             <p class="text-sm md:text-lg text-justify">
                 📍Jajag, Gambiran, Banyuwangi <br>
-                ☎️ +62 812-3456-7890 <br>
-                📧 echo@mail.com
+                ☎️ <a target="_blank" href="https://wa.me/6282257038056?text=Hallo Echo👋">+62 822-5703-8056</a> <br>
+                📧 <a target="_blank" href="mailto:echooutdoor.bwi@gmail.com">echooutdoor.bwi@gmail.com</a> <br>
+                📷 <a target="_blank" href="https://www.instagram.com/echo.outdoor/">@echo.outdoor</a>
             </p>
         </div>
     </div>

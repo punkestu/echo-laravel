@@ -35,7 +35,8 @@
                 <p class="text-sm md:text-lg text-justify">Echo adalah tempat dimana anda dapat menemukan dan menyewa
                     berbagai peralatan outdoor yang anda butuhkan. Mulai dari peralatan hiking, camping, hingga
                     alat-alat untuk kegiatan outdoor lainnya.</p>
-                <p class="text-sm md:text-lg text-justify">Kami menyediakan berbagai pilihan peralatan outdoor yang dapat anda
+                <p class="text-sm md:text-lg text-justify">Kami menyediakan berbagai pilihan peralatan outdoor yang
+                    dapat anda
                     pilih sesuai dengan kebutuhan anda. Anda dapat melakukan booking peralatan tersebut secara online
                     melalui website kami.</p>
             </div>
@@ -46,31 +47,31 @@
                 Mau sewa peralatan hiking, camping, atau alat-alat outdoor lainnya? Kami punya semua yang anda butuhkan.
             </p>
             <div class="grid md:grid-cols-3 xl:grid-cols-5 gap-4 mt-4">
-                <a href="/catalog?filter_type=kursi">
+                <a href="{{ route('catalog') }}">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center gap-2">
                         <img src="/images/illustration/kursi.png" alt="Kursi" class="h-48">
                         <h4 class="text-lg font-bold">Kursi</h4>
                     </div>
                 </a>
-                <a href="/catalog?filter_type=meja">
+                <a href="{{ route('catalog') }}">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center gap-2">
                         <img src="/images/illustration/meja.png" alt="Meja" class="h-48">
                         <h4 class="text-lg font-bold">Meja</h4>
                     </div>
                 </a>
-                <a href="/catalog?filter_type=kompor">
+                <a href="{{ route('catalog') }}">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center gap-2">
                         <img src="/images/illustration/kompor.png" alt="Kompor" class="h-48">
                         <h4 class="text-lg font-bold">Kompor</h4>
                     </div>
                 </a>
-                <a href="/catalog?filter_type=kamera">
+                <a href="{{ route('catalog') }}">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center gap-2">
                         <img src="/images/illustration/camera.png" alt="Kamera" class="h-48">
                         <h4 class="text-lg font-bold">Kamera Digital</h4>
                     </div>
                 </a>
-                <a href="/catalog">
+                <a href="{{ route('catalog') }}">
                     <div class="h-full bg-light rounded-md p-4 flex flex-col items-center justify-center gap-2">
                         <h4 class="text-lg font-bold text-center">Lihat Lainnya <br> di Katalog</h4>
                     </div>
@@ -96,7 +97,8 @@
                 </ul>
                 <div class="flex">
                     <a href="/Echo - Catalog.pdf" target="_blank"
-                        class="text-sm md:text-lg bg-light px-4 py-2 rounded-sm flex justify-center items-center gap-2 w-full md:w-auto">Baca Lebih Lengkap di Sini
+                        class="text-sm md:text-lg bg-light px-4 py-2 rounded-sm flex justify-center items-center gap-2 w-full md:w-auto">Baca
+                        Lebih Lengkap di Sini
                         <img src="/icons/share.png" alt="share" class="h-6"></a>
                 </div>
             </div>
@@ -113,7 +115,8 @@
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="register-name" class="text-sm md:text-lg font-bold">Nama Lengkap</label>
                             <input type="text" name="name" id="register-name"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Nama Lengkap" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Nama Lengkap"
+                                required>
                             @if ($errors->has('name'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('name') }}</p>
                             @endif
@@ -129,7 +132,8 @@
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="register-password" class="text-sm md:text-lg font-bold">Password</label>
                             <input type="password" name="password" id="register-password"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password"
+                                required>
                             @if ($errors->has('password'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('password') }}</p>
                             @endif
@@ -148,12 +152,14 @@
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="login-email" class="text-sm md:text-lg font-bold">Email</label>
                             <input type="email" name="email" id="login-email"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email"
+                                required>
                         </div>
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="login-password" class="text-sm md:text-lg font-bold">Password</label>
                             <input type="password" name="password" id="login-password"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Password"
+                                required>
                         </div>
                         <button type="submit"
                             class="text-sm md:text-lg w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Masuk</button>
