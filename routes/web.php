@@ -19,6 +19,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'user_index'])->middleware(['auth'])->name('cart');
 
 Route::group(["prefix" => "/dashboard", "middleware" => [
     'auth',

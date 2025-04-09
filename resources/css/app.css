@@ -16,3 +16,13 @@
 [popover]::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+.hide-num-btn {
+    appearance: textfield;
+}
+
+.hide-num-btn::-webkit-outer-spin-button,
+.hide-num-btn::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

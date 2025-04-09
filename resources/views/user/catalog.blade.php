@@ -56,19 +56,81 @@
                 <div id="detail-catalog-items" class="flex justify-center flex-wrap gap-2 mt-4">
                     {{-- <span class="bg-blue-400 text-white rounded-full px-3 py-1">name x qty</span> --}}
                 </div>
+                @auth
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="flex justify-center gap-1">
+                            <button class="font-black p-1 w-1/4 rounded hover:bg-gray-300 border"
+                                onclick="maninputnum('addtocart-qty', -1)">-</button>
+                            <input type="number" id="addtocart-qty"
+                                class="p-2 text-sm w-1/4 border rounded-md text-center hide-num-btn">
+                            <button class="font-black p-1 w-1/4 rounded hover:bg-gray-300 border"
+                                onclick="maninputnum('addtocart-qty', 1)">+</button>
+                        </div>
+                        <button id="addtocart" onclick="addtocart(this)" class="flex-grow bg-light px-3 py-1 rounded-md">+
+                            Masukkan
+                            Keranjang</button>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>
 @endsection
 @section('scripts')
     <script>
+        function maninputnum(id, by) {
+            const el = document.getElementById(id);
+            const value = parseInt(el.value);
+            if (isNaN(value) || value + by < 1) {
+                el.value = 1;
+            } else {
+                el.value = Math.max(1, value + by);
+            }
+        }
+
+        async function addtocart(el) {
+            const id = el.getAttribute('catalog-id');
+            const qty = document.getElementById('addtocart-qty').value;
+            const url = "{{ route('cart.add') }}";
+            // get auth_token from cookies
+            const auth_token = await getToken('auth_token');
+            alert(auth_token);
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Authorization': `Bearer ${auth_token}`,
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        catalog_id: id,
+                        qty: qty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Berhasil menambahkan ke keranjang');
+                        closeModal('detail-catalog-modal');
+                    } else {
+                        alert('Gagal menambahkan ke keranjang');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
         function setDetailCatalog(id, name, price, description, image, items) {
             return () => {
+                document.getElementById('addtocart').setAttribute('catalog-id', id);
+                document.getElementById('addtocart-qty').value = 1;
                 document.getElementById('detail-catalog-name').innerText = name;
                 document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
                     ' / Hari';
                 document.getElementById('detail-catalog-description').innerText = description;
-                document.getElementById('detail-catalog-image').src = image != "/storage/" ? image : '/images/logo/normallight.svg';
+                document.getElementById('detail-catalog-image').src = image != "/storage/" ? image :
+                    '/images/logo/normallight.svg';
 
                 const itemsContainer = document.getElementById('detail-catalog-items');
                 itemsContainer.innerHTML = '';
