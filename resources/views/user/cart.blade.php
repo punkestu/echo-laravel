@@ -46,7 +46,7 @@
             <button onclick="toggleorder()" class="bg-light text-dark px-3 py-2 rounded-lg border">Pesan Sekarang</button>
         </div>
         <aside id="order-form"
-            class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 fixed top-2 -right-full lg:relative lg:top-0 lg:right-0 px-4 py-4 rounded-md overflow-x-hidden h-[95vh] md:min-h-[70vh] overflow-y-scroll duration-500">
+            class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 fixed top-2 -right-full lg:relative lg:top-0 lg:right-0 px-4 py-4 rounded-md overflow-x-hidden h-[90vh] md:min-h-[70vh] overflow-y-scroll duration-500">
             <div class="flex flex-col gap-2">
                 <div class="lg:hidden flex justify-end">
                     <button onclick="toggleorder()" class="bg-red-500 px-3 py-1 rounded-md text-white">x Close</button>
