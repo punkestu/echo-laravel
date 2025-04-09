@@ -46,7 +46,7 @@
             <button onclick="toggleorder()" class="bg-light text-dark px-3 py-2 rounded-lg border">Pesan Sekarang</button>
         </div>
         <aside id="order-form"
-            class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 absolute -right-full lg:relative lg:right-0 px-4 py-4 rounded-md overflow-x-hidden min-h-[70vh] duration-500">
+            class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 fixed top-2 -right-full lg:relative lg:top-0 lg:right-0 px-4 py-4 rounded-md overflow-x-hidden h-[95vh] md:min-h-[70vh] overflow-y-scroll duration-500">
             <div class="flex flex-col gap-2">
                 <div class="lg:hidden flex justify-end">
                     <button onclick="toggleorder()" class="bg-red-500 px-3 py-1 rounded-md text-white">x Close</button>
@@ -92,10 +92,10 @@
                     class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
             </section>
             <div class="flex flex-col gap-2">
-                <textarea readonly class="border rounded-md w-full resize-none p-2" rows="10"></textarea>
+                <textarea id="order-text" readonly class="border rounded-md w-full resize-none p-2" rows="10"></textarea>
                 <div class="flex gap-2">
-                    <button class="border rounded-md px-3 py-1">Copy</button>
-                    <button class="bg-green-500 border rounded-md px-3 py-1">Pesan ke Whatsapp</button>
+                    <button onclick="copy('order-text')" class="border rounded-md px-3 py-1">Copy</button>
+                    <button onclick="order()" class="bg-green-500 border rounded-md px-3 py-1">Pesan ke Whatsapp</button>
                 </div>
             </div>
         </div>
@@ -108,6 +108,20 @@
             currency: 'IDR',
             minimumFractionDigits: 0
         }).format(value).replace('Rp', '');
+
+        function copy(id) {
+            document.getElementById(id).select();
+            document.execCommand('copy');
+            alert('Teks berhasil disalin ke clipboard');
+            document.getElementById(id).blur();
+        }
+
+        function order() {
+            const orderText = document.querySelector('#order-modal textarea');
+            const url = `https://api.whatsapp.com/send?phone=6282257038056&text=${encodeURIComponent(orderText.value)}`;
+            window.open(url, '_blank');
+            closeModal('order-modal');
+        }
 
         function toggleorder() {
             document.querySelector('#order-form').classList.toggle('-right-full');
