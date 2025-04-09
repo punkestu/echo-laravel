@@ -78,9 +78,9 @@
                 <textarea name="tempatcod" id="tempatcod" rows="3" class="border px-2 py-1 rounded resize-none"
                     placeholder="Masukan Tempat COD ..."></textarea>
                 <label for="jamambil">Jam Pengambilan</label>
-                <input type="datetime-local" name="jamambil" id="jamambil" class="border px-2 py-1 rounded">
+                <input type="datetime-local" name="jamambil" id="jamambil" class="border px-2 py-1 rounded" onchange="calculateTotal()">
                 <label for="jamkembali">Jam Pengembalian</label>
-                <input type="datetime-local" name="jamkembali" id="jamkembali" class="border px-2 py-1 rounded">
+                <input type="datetime-local" name="jamkembali" id="jamkembali" class="border px-2 py-1 rounded" onchange="calculateTotal()">
             </div>
         </aside>
     </section>
@@ -147,22 +147,30 @@
             const pengambilan = document.getElementById('pengambilan').value;
             const tempatcod = document.getElementById('tempatcod').value;
             const jamambil = document.getElementById('jamambil').value;
-            const jamkembali = document.getElementById('jamkembali');
+            const jamkembali = document.getElementById('jamkembali').value;
             orderText.value = '';
+
+            if (!nama || !nohp || !alamat || !jaminan || !pengambilan || !jamambil || !jamkembali) {
+                orderText.value = 'Silahkan lengkapi semua data pemesanan';
+                return;
+            }
+
+            const duration = new Date(jamkembali) - new Date(jamambil);
+            const durationinday = Math.ceil(duration / (1000 * 60 * 60 * 24));
             var total = 0;
             orderText.value +=
-                `Form Peminjaman Barang @echo.outdoor\nNama : ${nama}\nNo. HP : ${nohp}\nAlamat : ${alamat}\nBarang yang disewa : \n`;
+                `*Form Peminjaman Barang @echo.outdoor*\n\n- Nama : ${nama}\n- No. HP : ${nohp}\n- Alamat : ${alamat}\n- Barang yang disewa : \n`;
             orders.forEach((idcart) => {
                 const cart = document.querySelector(`input[value="${idcart}"]`);
                 const catalog = cart.getAttribute('data-catalog');
                 const catalogData = JSON.parse(catalog);
                 const qty = document.getElementById('cart-qty-' + idcart).value;
-                const subtotal = catalogData.price * qty;
+                const subtotal = catalogData.price * qty * durationinday;
                 total += subtotal;
                 orderText.value +=
-                    `\t- ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = ${formatCurrency(subtotal)}\n`;
+                    `\t\t- ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = ${formatCurrency(subtotal)}\n`;
             });
-            orderText.value += `\tTotal: Rp. ${formatCurrency(total)}\n`;
+            orderText.value += `\t\tTotal: Rp. ${formatCurrency(total)}\n`;
             orderText.value +=
                 `Jaminan : ${jaminan}\nPengambilan : ${pengambilan}\nTempat COD : ${tempatcod}\nJam Pengambilan : ${jamambil}\nJam Pengembalian : ${jamkembali}\n\nNote : Penyewaan berlaku 24 jam, lebih dari jangka waktu tersebut akan dikenakan charge 5k/jam`;
         }
@@ -194,13 +202,17 @@
         }
 
         function calculateTotal() {
+            const jamambil = document.getElementById('jamambil').value;
+            const jamkembali = document.getElementById('jamkembali').value;
+            const durasi = (!jamambil || !jamkembali) ? 1 : (new Date(jamkembali) - new Date(jamambil));
+            const durasiinday = Math.ceil(durasi / (1000 * 60 * 60 * 24));
             let total = 0;
             orders.forEach((idcart) => {
                 const cart = document.querySelector(`input[value="${idcart}"]`);
                 const catalog = cart.getAttribute('data-catalog');
                 const catalogData = JSON.parse(catalog);
                 const qty = document.getElementById('cart-qty-' + idcart).value;
-                const subtotal = catalogData.price * qty;
+                const subtotal = catalogData.price * qty * durasiinday;
                 total += subtotal;
             });
             document.getElementById('total').innerText = 'Rp. ' + formatCurrency(total);
