@@ -7,5 +7,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/generate-token', [App\Http\Controllers\AuthController::class, 'get_token'])->middleware('auth:sanctum')->name('generate-token');
-Route::post('/cart', [App\Http\Controllers\CartController::class, 'add'])->middleware('auth:sanctum')->name('cart.add');
+Route::group(['prefix' => '/cart', 'middleware' => ['auth:sanctum']], function () {
+    Route::post('/', [App\Http\Controllers\CartController::class, 'add'])->middleware('auth:sanctum')->name('cart.add');
+    Route::delete('/{id}', [App\Http\Controllers\CartController::class, 'remove'])->middleware('auth:sanctum')->name('cart.remove');
+});

@@ -73,6 +73,7 @@ class AuthController
         $user->role = request('role', 'user');
         $user->save();
         Auth::login($user);
+        request()->session()->regenerate();
         return redirect()->back()->with('alert', [
             'type' => 'success',
             'message' => 'Berhasil mendaftar!'
@@ -92,14 +93,12 @@ class AuthController
         ]);
     }
 
-    public function getToken(Request $request)
+    public function getToken()
     {
         if (Auth::check()) {
-            $user = \App\Models\User::where('id', $request->user()->id())->first();
-            $user->tokens()->delete();
-            return response()->json([
-                'token' => $user->createToken('auth_token')->plainTextToken,
-            ]);
+            $user = \App\Models\User::where('id', Auth::id())->first();
+            $token = $user->createToken('api-token');
+            return response()->json(['token' => $token->plainTextToken]);
         }
         return response()->json([
             'error' => 'Unauthorized'

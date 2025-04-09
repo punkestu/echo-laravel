@@ -57,7 +57,7 @@
                     {{-- <span class="bg-blue-400 text-white rounded-full px-3 py-1">name x qty</span> --}}
                 </div>
                 @auth
-                    <div class="flex flex-col items-center gap-2">
+                    <div class="flex flex-col items-center gap-2 mt-2">
                         <div class="flex justify-center gap-1">
                             <button class="font-black p-1 w-1/4 rounded hover:bg-gray-300 border"
                                 onclick="maninputnum('addtocart-qty', -1)">-</button>
@@ -91,15 +91,13 @@
             const id = el.getAttribute('catalog-id');
             const qty = document.getElementById('addtocart-qty').value;
             const url = "{{ route('cart.add') }}";
-            // get auth_token from cookies
-            const auth_token = await getToken('auth_token');
-            alert(auth_token);
+            const auth_token = await getToken();
             fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Authorization': `Bearer ${auth_token}`,
+                        'Authorization': `Bearer ${auth_token.token}`,
                     },
                     credentials: 'include',
                     body: JSON.stringify({
@@ -109,7 +107,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    if (data.status) {
                         alert('Berhasil menambahkan ke keranjang');
                         closeModal('detail-catalog-modal');
                     } else {

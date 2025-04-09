@@ -22,16 +22,21 @@ async function getToken() {
     await fetch("/sanctum/csrf-cookie", {
         credentials: "include",
     });
-    return fetch("/api/generate-token", {
+    return fetch("/auth/generate-token", {
         method: "POST",
         credentials: "include",
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
         },
     })
         .then((res) => res.json())
-        .then(console.log);
+        .catch((err) => {
+            window.location.href = "/logout";
+        });
 }
 
 window.toggleModal = toggleModal;

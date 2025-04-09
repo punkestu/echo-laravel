@@ -8,8 +8,13 @@
                 <a href="{{ route('dashboard') }}" class="underline">Dashboard</a>
             @else
                 <a href="{{ route('catalog') }}" class="underline">Katalog</a>
-                <a href="{{ route('cart') }}" class="underline flex relative">Keranjang <span
-                        class="w-3 h-3 rounded-full absolute -right-2 bg-red-500"></span></a>
+                <a href="{{ route('cart') }}" class="underline flex relative">Keranjang
+                    @if (isset($cart_count) && $cart_count > 0)
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                            {{ $cart_count }}
+                        </span>
+                    @endif
+                </a>
             @endif
             <a href="{{ route('auth.logout') }}" class="bg-red-500 text-white rounded-sm px-3 py-1">Logout</a>
         @endauth

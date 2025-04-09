@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,10 +28,33 @@ class CartController
         } else {
             $user->carts()->create([
                 'catalog_id' => $request->catalog_id,
-                'qty' => 1,
+                'qty' => $request->qty,
             ]);
         }
 
-        return redirect()->back()->with('success', 'Item added to cart successfully.');
+        return response()->json([
+            'status' => true,
+            'message' => 'Berhasil.',
+        ]);
+    }
+
+    public function remove($id)
+    {
+        $cart = Cart::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
+
+        if ($cart) {
+            $cart->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil.',
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal.',
+        ]);
     }
 }
