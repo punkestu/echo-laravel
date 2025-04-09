@@ -42,9 +42,13 @@
                 @endforeach
             </aside>
         @endif
-        <aside id="order-form" class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 absolute -right-full lg:relative lg:right-0 px-4 py-4 rounded-md overflow-x-hidden min-h-[70vh] duration-500">
+        <div id="toggler" class="fixed bottom-2 right-2 flex lg:hidden justify-end z-0 mt-2 duration-500">
+            <button onclick="toggleorder()" class="bg-light text-dark px-3 py-2 rounded-lg border">Pesan Sekarang</button>
+        </div>
+        <aside id="order-form"
+            class="bg-netral border w-5/6 lg:w-1/4 z-20 lg:z-0 fixed top-2 -right-full lg:relative lg:top-0 lg:right-0 px-4 py-4 rounded-md overflow-x-hidden h-[95vh] md:min-h-[70vh] overflow-y-scroll duration-500">
             <div class="flex flex-col gap-2">
-                <div class="md:hidden flex justify-end">
+                <div class="lg:hidden flex justify-end">
                     <button onclick="toggleorder()" class="bg-red-500 px-3 py-1 rounded-md text-white">x Close</button>
                 </div>
                 <h4 class="text-lg font-bold">Total</h4>
@@ -80,9 +84,6 @@
             </div>
         </aside>
     </section>
-    <div id="toggler" class="sticky bottom-2 flex lg:hidden justify-end z-0 mt-2 duration-500">
-        <button onclick="toggleorder()" class="bg-light text-dark px-3 py-2 rounded-lg border">Pesan Sekarang</button>
-    </div>
     <div id="order-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
         <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('order-modal')"></button>
         <div class="bg-white rounded-md shadow-lg mx-4 min-w-1/2 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
@@ -91,10 +92,10 @@
                     class="bg-red-500 text-white px-3 py-1 rounded-md">Close</button>
             </section>
             <div class="flex flex-col gap-2">
-                <textarea readonly class="border rounded-md w-full resize-none p-2" rows="10"></textarea>
+                <textarea id="order-text" readonly class="border rounded-md w-full resize-none p-2" rows="10"></textarea>
                 <div class="flex gap-2">
-                    <button class="border rounded-md px-3 py-1">Copy</button>
-                    <button class="bg-green-500 border rounded-md px-3 py-1">Pesan ke Whatsapp</button>
+                    <button onclick="copy('order-text')" class="border rounded-md px-3 py-1">Copy</button>
+                    <button onclick="order()" class="bg-green-500 border rounded-md px-3 py-1">Pesan ke Whatsapp</button>
                 </div>
             </div>
         </div>
@@ -108,9 +109,33 @@
             minimumFractionDigits: 0
         }).format(value).replace('Rp', '');
 
+        function copy(id) {
+            document.getElementById(id).select();
+            document.execCommand('copy');
+            alert('Teks berhasil disalin ke clipboard');
+            document.getElementById(id).blur();
+        }
+
+        function order() {
+            const orderText = document.querySelector('#order-modal textarea');
+            const url = `https://api.whatsapp.com/send?phone=6282257038056&text=${encodeURIComponent(orderText.value)}`;
+            window.open(url, '_blank');
+            closeModal('order-modal');
+        }
+
         function toggleorder() {
             document.querySelector('#order-form').classList.toggle('-right-full');
             document.querySelector('#order-form').classList.toggle('right-0');
+        }
+
+        function openorder() {
+            document.querySelector('#order-form').classList.remove('-right-full');
+            document.querySelector('#order-form').classList.add('right-0');
+        }
+
+        function closeorder() {
+            document.querySelector('#order-form').classList.remove('right-0');
+            document.querySelector('#order-form').classList.add('-right-full');
         }
 
         function setOrderText() {

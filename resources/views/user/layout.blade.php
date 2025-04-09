@@ -19,9 +19,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-netral relative overflow-x-hidden">
+<body class="bg-netral relative">
     @include('includes.header')
-    <main class="p-4 min-h-[85vh]">
+    <main class="p-4 min-h-[85vh] relative overflow-x-hidden overflow-y-clip">
         @yield('content')
     </main>
     @include('includes.footer')
