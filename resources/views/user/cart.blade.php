@@ -168,11 +168,11 @@
                 const subtotal = catalogData.price * qty * durationinday;
                 total += subtotal;
                 orderText.value +=
-                    `\t\t- ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = ${formatCurrency(subtotal)}\n`;
+                    `\t\t+ ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = ${formatCurrency(subtotal)}\n`;
             });
             orderText.value += `\t\tTotal: Rp. ${formatCurrency(total)}\n`;
             orderText.value +=
-                `Jaminan : ${jaminan}\nPengambilan : ${pengambilan}\nTempat COD : ${tempatcod}\nJam Pengambilan : ${jamambil}\nJam Pengembalian : ${jamkembali}\n\nNote : Penyewaan berlaku 24 jam, lebih dari jangka waktu tersebut akan dikenakan charge 5k/jam`;
+                `- Jaminan : ${jaminan}\n- Pengambilan : ${pengambilan}\n- Tempat COD : ${tempatcod ?? '-'}\n- Jam Pengambilan : ${jamambil}\n- Jam Pengembalian : ${jamkembali}\n\nNote : Penyewaan berlaku 24 jam, lebih dari jangka waktu tersebut akan dikenakan charge 5k/jam`;
         }
 
         function maninputnum(id, by) {
