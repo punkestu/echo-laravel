@@ -13,7 +13,7 @@
                 <p class="text-lg text-gray-500">Keranjangmu kosong</p>
             </aside>
         @else
-            <aside id="cart-list" class="flex-grow flex flex-wrap gap-4">
+            <aside id="cart-list" class="flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
                 @foreach ($carts as $index => $item)
                     <div id="cart-{{ $item->id }}" class="cart-item border p-2 rounded-md">
                         <label>
