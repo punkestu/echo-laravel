@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Request;
 
 class AuthController
 {
@@ -28,6 +30,7 @@ class AuthController
         }
         $credentials = request()->only('email', 'password');
         if (Auth::attempt($credentials)) {
+            request()->session()->regenerate();
             return redirect()->back()->with('alert', [
                 'type' => 'success',
                 'message' => 'Berhasil masuk!'
@@ -70,6 +73,7 @@ class AuthController
         $user->role = request('role', 'user');
         $user->save();
         Auth::login($user);
+        request()->session()->regenerate();
         return redirect()->back()->with('alert', [
             'type' => 'success',
             'message' => 'Berhasil mendaftar!'
@@ -78,10 +82,26 @@ class AuthController
 
     public function logout()
     {
+        $user = \App\Models\User::where('id', Auth::id())->first();
+        if ($user) {
+            $user->tokens()->delete();
+        }
         Auth::logout();
         return redirect()->back()->with('alert', [
             'type' => 'success',
             'message' => 'Berhasil keluar!'
         ]);
+    }
+
+    public function getToken()
+    {
+        if (Auth::check()) {
+            $user = \App\Models\User::where('id', Auth::id())->first();
+            $token = $user->createToken('api-token');
+            return response()->json(['token' => $token->plainTextToken]);
+        }
+        return response()->json([
+            'error' => 'Unauthorized'
+        ], 401);
     }
 }
