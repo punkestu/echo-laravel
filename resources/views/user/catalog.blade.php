@@ -121,8 +121,10 @@
 
         function setDetailCatalog(id, name, price, description, image, items) {
             return () => {
+                @auth
                 document.getElementById('addtocart').setAttribute('catalog-id', id);
                 document.getElementById('addtocart-qty').value = 1;
+                @endauth
                 document.getElementById('detail-catalog-name').innerText = name;
                 document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
                     ' / Hari';
