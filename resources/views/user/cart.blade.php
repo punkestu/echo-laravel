@@ -57,10 +57,10 @@
                     class="bg-blue-500 text-white px-3 py-1 rounded-md">Pesan</button>
                 <label for="name">Nama</label>
                 <input type="text" name="name" id="name" class="border px-2 py-1 rounded"
-                    placeholder="Masukan Nama Lengkap ...">
+                    placeholder="Masukan Nama Lengkap ..." value="{{ auth()->user()->name }}">
                 <label for="nohp">No. HP</label>
                 <input type="text" name="nohp" id="nohp" class="border px-2 py-1 rounded"
-                    placeholder="Masukan Nomor HP ...">
+                    placeholder="Masukan Nomor HP ..." value="{{ auth()->user()->nohp }}">
                 <label for="alamat">Alamat</label>
                 <textarea name="alamat" id="alamat" rows="3" class="border px-2 py-1 rounded resize-none"
                     placeholder="Masukan Alamat Lengkap ..."></textarea>
@@ -74,13 +74,15 @@
                     <option value="Ambil di Rumah">Ambil di Rumah</option>
                     <option value="COD">COD</option>
                 </select>
-                <label for="tempatcod">Tempat COD</label>
+                <label for="tempatcod">Tempat COD (opsional)</label>
                 <textarea name="tempatcod" id="tempatcod" rows="3" class="border px-2 py-1 rounded resize-none"
                     placeholder="Masukan Tempat COD ..."></textarea>
                 <label for="jamambil">Jam Pengambilan</label>
-                <input type="datetime-local" name="jamambil" id="jamambil" class="border px-2 py-1 rounded" onchange="calculateTotal()">
+                <input type="datetime-local" name="jamambil" id="jamambil" class="border px-2 py-1 rounded"
+                    onchange="calculateTotal()">
                 <label for="jamkembali">Jam Pengembalian</label>
-                <input type="datetime-local" name="jamkembali" id="jamkembali" class="border px-2 py-1 rounded" onchange="calculateTotal()">
+                <input type="datetime-local" name="jamkembali" id="jamkembali" class="border px-2 py-1 rounded"
+                    onchange="calculateTotal()">
             </div>
         </aside>
     </section>
