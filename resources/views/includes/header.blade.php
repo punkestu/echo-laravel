@@ -7,8 +7,7 @@
             @if (auth()->user()->isAdmin())
                 <a href="{{ route('dashboard') }}" class="underline">Dashboard</a>
             @else
-                <a href="{{ route('catalog') }}" class="underline">Katalog</a>
-                <a href="{{ route('cart') }}" class="underline flex relative">Keranjang
+                <a href="{{ route('catalog') }}" class="underline flex relative">Katalog
                     @if (isset($cart_count) && $cart_count > 0)
                         <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
                             {{ $cart_count }}

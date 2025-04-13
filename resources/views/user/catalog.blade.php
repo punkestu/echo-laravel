@@ -1,10 +1,21 @@
 @extends('user.layout')
 @section('content')
-    <section class="mb-2">
-        <h3 class="text-lg md:text-xl font-bold">Katalog</h3>
-        <p class="text-sm text-justify">
-            Banyak item atau paket yang tersedia di sini. Buat jalan-jalanmu lebih mudah bersama Echo.
-        </p>
+    <section class="mb-2 flex flex-wrap justify-between items-center">
+        <aside>
+            <h3 class="text-lg md:text-xl font-bold">Katalog</h3>
+            <p class="text-sm text-justify">
+                Banyak item atau paket yang tersedia di sini. Buat jalan-jalanmu lebih mudah bersama Echo.
+            </p>
+        </aside>
+        @auth
+            <a href="{{ route('cart') }}" class="px-3 py-1 rounded-md bg-light/75 hover:bg-light/100 duration-150 relative">Keranjang
+                @if (isset($cart_count) && $cart_count > 0)
+                    <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                        {{ $cart_count }}
+                    </span>
+                @endif
+            </a>
+        @endauth
     </section>
     <section class="mb-2">
         <form id="filter-form" action="{{ route('catalog') }}" method="GET" class="flex gap-2">
@@ -124,23 +135,23 @@
                 @auth
                 document.getElementById('addtocart').setAttribute('catalog-id', id);
                 document.getElementById('addtocart-qty').value = 1;
-                @endauth
-                document.getElementById('detail-catalog-name').innerText = name;
-                document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
-                    ' / Hari';
-                document.getElementById('detail-catalog-description').innerText = description;
-                document.getElementById('detail-catalog-image').src = image != "/storage/" ? image :
-                    '/images/logo/normallight.svg';
+            @endauth
+            document.getElementById('detail-catalog-name').innerText = name;
+            document.getElementById('detail-catalog-price').innerText = 'Rp. ' + price.toLocaleString('id-ID') +
+                ' / Hari';
+            document.getElementById('detail-catalog-description').innerText = description;
+            document.getElementById('detail-catalog-image').src = image != "/storage/" ? image :
+                '/images/logo/normallight.svg';
 
-                const itemsContainer = document.getElementById('detail-catalog-items');
-                itemsContainer.innerHTML = '';
-                items.forEach(item => {
-                    const itemElement = document.createElement('span');
-                    itemElement.className = 'bg-blue-400 text-white rounded-full px-3 py-1';
-                    itemElement.innerText = item.item.name + ' x ' + item.qty;
-                    itemsContainer.appendChild(itemElement);
-                });
-            }
+            const itemsContainer = document.getElementById('detail-catalog-items');
+            itemsContainer.innerHTML = '';
+            items.forEach(item => {
+                const itemElement = document.createElement('span');
+                itemElement.className = 'bg-blue-400 text-white rounded-full px-3 py-1';
+                itemElement.innerText = item.item.name + ' x ' + item.qty;
+                itemsContainer.appendChild(itemElement);
+            });
+        }
         }
     </script>
 @endsection
