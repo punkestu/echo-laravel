@@ -16,10 +16,8 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [App\Http\Controllers\AuthController::class, 'login'])->name('auth.login');
     Route::post('register', [App\Http\Controllers\AuthController::class, 'register'])->name('auth.register');
     Route::get('logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('auth.logout');
-    Route::post('/generate-token', [
-        App\Http\Controllers\AuthController::class,
-        'getToken'
-    ])->middleware('auth')->name('generate-token');
+    Route::post('generate-token', [App\Http\Controllers\AuthController::class, 'getToken'])->middleware('auth')->name('generate-token');
+    Route::post('set-nohp', [App\Http\Controllers\AuthController::class, 'setNoHp'])->middleware('auth')->name('set-nohp');
 });
 
 Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');

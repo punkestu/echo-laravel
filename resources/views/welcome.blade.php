@@ -19,6 +19,37 @@
 <body class="bg-netral relative">
     @include('includes.alert')
     @include('includes.header')
+    @auth
+        @if (!auth()->user()->nohp)
+            <div id="set-nohp-modal" class="fixed inset-0 z-50 flex items-center justify-center">
+                <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('set-nohp-modal')"></button>
+                <div class="bg-white rounded-md shadow-lg mx-4 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
+                    <div class="flex justify-end mb-2">
+                        <button onclick="closeModal('set-nohp-modal')"
+                            class="bg-red-500 text-white px-3 py-1 rounded-md">Tutup</button>
+                    </div>
+                    <div class="flex flex-col items-center mb-2">
+                        <p class="text-justify">Nomor Hp kamu belum diset. Set sekarang untuk dapat promo dan keuntungan
+                            lainnya.</p>
+                        <form action="{{ route('set-nohp') }}" method="POST" class="w-full">
+                            @csrf
+                            <div class="flex flex-col gap-2 mb-2">
+                                <label for="set-nohp" class="text-sm md:text-lg font-bold">Nomor Hp</label>
+                                <input type="text" name="nohp" id="set-nohp"
+                                    class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="No HP"
+                                    required>
+                                @if ($errors->has('nohp'))
+                                    <p class="text-red-500 text-sm">{{ $errors->first('nohp') }}</p>
+                                @endif
+                            </div>
+                            <button type="submit"
+                                class="text-sm md:text-lg w-full bg-dark text-light rounded-md px-4 py-2 mt-2 hover:bg-dark/80 transition duration-200">Set</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
     <main class="px-6 py-2">
         <section class="relative h-[85vh] rounded-md">
             <div class="w-full h-full flex flex-col gap-2 justify-center items-center bg-netral/65 text-black/85">
@@ -124,9 +155,18 @@
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="register-email" class="text-sm md:text-lg font-bold">Email</label>
                             <input type="email" name="email" id="register-email"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Email"
+                                required>
                             @if ($errors->has('email'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('email') }}</p>
+                            @endif
+                        </div>
+                        <div class="flex flex-col gap-2 mb-2">
+                            <label for="register-nohp" class="text-sm md:text-lg font-bold">Nomor HP</label>
+                            <input type="text" name="nohp" id="register-nohp"
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="nohp" required>
+                            @if ($errors->has('nohp'))
+                                <p class="text-red-500 text-sm">{{ $errors->first('nohp') }}</p>
                             @endif
                         </div>
                         <div class="flex flex-col gap-2 mb-2">
