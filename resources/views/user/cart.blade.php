@@ -56,33 +56,33 @@
                 <button onclick="toggleModal('order-modal', setOrderText)"
                     class="bg-blue-500 text-white px-3 py-1 rounded-md">Pesan</button>
                 <label for="name">Nama</label>
-                <input type="text" name="name" id="name" class="border px-2 py-1 rounded"
-                    placeholder="Masukan Nama Lengkap ..." value="{{ auth()->user()->name }}">
+                <input type="text" name="name" id="name" class="order-field border px-2 py-1 rounded"
+                    placeholder="Masukan Nama Lengkap ..." value="{{ auth()->user()->name }}" required>
                 <label for="nohp">No. HP</label>
-                <input type="text" name="nohp" id="nohp" class="border px-2 py-1 rounded"
-                    placeholder="Masukan Nomor HP ..." value="{{ auth()->user()->nohp }}">
+                <input type="text" name="nohp" id="nohp" class="order-field border px-2 py-1 rounded"
+                    placeholder="Masukan Nomor HP ..." value="{{ auth()->user()->nohp }}" required>
                 <label for="alamat">Alamat</label>
-                <textarea name="alamat" id="alamat" rows="3" class="border px-2 py-1 rounded resize-none"
-                    placeholder="Masukan Alamat Lengkap ..."></textarea>
+                <textarea name="alamat" id="alamat" rows="3" class="order-field border px-2 py-1 rounded resize-none"
+                    placeholder="Masukan Alamat Lengkap ..." required></textarea>
                 <label for="jaminan">Jaminan</label>
-                <select name="jaminan" id="jaminan" class="border px-2 py-1 rounded">
+                <select name="jaminan" id="jaminan" class="order-field border px-2 py-1 rounded" required>
                     <option value="KTP">KTP</option>
                     <option value="SIM">SIM</option>
                 </select>
                 <label for="pengambilan">Pengambilan</label>
-                <select name="pengambilan" id="pengambilan" class="border px-2 py-1 rounded">
+                <select name="pengambilan" id="pengambilan" class="order-field border px-2 py-1 rounded" required>
                     <option value="Ambil di Rumah">Ambil di Rumah</option>
                     <option value="COD">COD</option>
                 </select>
                 <label for="tempatcod">Tempat COD (opsional)</label>
-                <textarea name="tempatcod" id="tempatcod" rows="3" class="border px-2 py-1 rounded resize-none"
+                <textarea name="tempatcod" id="tempatcod" rows="3" class="order-field border px-2 py-1 rounded resize-none"
                     placeholder="Masukan Tempat COD ..."></textarea>
                 <label for="jamambil">Jam Pengambilan</label>
-                <input type="datetime-local" name="jamambil" id="jamambil" class="border px-2 py-1 rounded"
-                    onchange="calculateTotal()">
+                <input type="datetime-local" name="jamambil" id="jamambil" class="order-field border px-2 py-1 rounded"
+                    onchange="calculateTotal()" required>
                 <label for="jamkembali">Jam Pengembalian</label>
-                <input type="datetime-local" name="jamkembali" id="jamkembali" class="border px-2 py-1 rounded"
-                    onchange="calculateTotal()">
+                <input type="datetime-local" name="jamkembali" id="jamkembali" class="order-field border px-2 py-1 rounded"
+                    onchange="calculateTotal()" required>
             </div>
         </aside>
     </section>
@@ -140,41 +140,55 @@
             document.querySelector('#order-form').classList.add('-right-full');
         }
 
+        function orderTextTpl(data) {
+            return `*Form Peminjaman Barang @echo.outdoor*\n\n- Nama : ${data.name}\n- No. HP : ${data.nohp}\n- Alamat : ${data.alamat}\n- Barang yang disewa : \n${data.items}\n- Jaminan : ${data.jaminan}\n- Pengambilan : ${data.pengambilan}\n- Tempat COD : ${data.tempatcod ?? '-'}\n- Jam Pengambilan : ${data.jamambil}\n- Jam Pengembalian : ${data.jamkembali}\n\nNote : Penyewaan berlaku 24 jam, lebih dari jangka waktu tersebut akan dikenakan charge 5k/jam`;
+        }
+
         function setOrderText() {
             const orderText = document.querySelector('#order-modal textarea');
-            const nama = document.getElementById('name').value;
-            const nohp = document.getElementById('nohp').value;
-            const alamat = document.getElementById('alamat').value;
-            const jaminan = document.getElementById('jaminan').value;
-            const pengambilan = document.getElementById('pengambilan').value;
-            const tempatcod = document.getElementById('tempatcod').value;
-            const jamambil = document.getElementById('jamambil').value;
-            const jamkembali = document.getElementById('jamkembali').value;
             orderText.value = '';
 
-            if (!nama || !nohp || !alamat || !jaminan || !pengambilan || !jamambil || !jamkembali) {
+            const data = Array.from(document.querySelectorAll('#order-form .order-field')).reduce((acc, el) => {
+                const name = el.getAttribute('name');
+                const value = el.value;
+                if (el.hasAttribute('required') && !value) {
+                    acc.valid = false;
+                }
+                acc["data"][name] = value;
+                return acc;
+            }, {
+                data: {},
+                valid: true
+            });
+
+            if (!data.valid) {
                 orderText.value = 'Silahkan lengkapi semua data pemesanan';
                 return;
             }
 
-            const duration = new Date(jamkembali) - new Date(jamambil);
-            const durationinday = Math.ceil(duration / (1000 * 60 * 60 * 24));
-            var total = 0;
-            orderText.value +=
-                `*Form Peminjaman Barang @echo.outdoor*\n\n- Nama : ${nama}\n- No. HP : ${nohp}\n- Alamat : ${alamat}\n- Barang yang disewa : \n`;
-            orders.forEach((idcart) => {
+            const items = orders.reduce((acc, idcart) => {
                 const cart = document.querySelector(`input[value="${idcart}"]`);
                 const catalog = cart.getAttribute('data-catalog');
                 const catalogData = JSON.parse(catalog);
                 const qty = document.getElementById('cart-qty-' + idcart).value;
-                const subtotal = catalogData.price * qty * durationinday;
-                total += subtotal;
-                orderText.value +=
-                    `\t\t+ ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = ${formatCurrency(subtotal)}\n`;
+                const subtotal = catalogData.price * qty;
+                acc.total += subtotal;
+                acc.text +=
+                    `\t\t+ ${catalogData.name} (Rp. ${formatCurrency(catalogData.price)}) x ${qty} = Rp. ${formatCurrency(subtotal)}\n`;
+                return acc;
+            }, {
+                text: "",
+                total: 0
             });
-            orderText.value += `\t\tTotal: Rp. ${formatCurrency(total)}\n`;
-            orderText.value +=
-                `- Jaminan : ${jaminan}\n- Pengambilan : ${pengambilan}\n- Tempat COD : ${tempatcod ?? '-'}\n- Jam Pengambilan : ${jamambil}\n- Jam Pengembalian : ${jamkembali}\n\nNote : Penyewaan berlaku 24 jam, lebih dari jangka waktu tersebut akan dikenakan charge 5k/jam`;
+            data["data"]["items"] = items.text
+
+            if (data.data["jamambil"] && data.data["jamkembali"]) {
+                const duration = new Date(data.data["jamkembali"]) - new Date(data.data["jamambil"]);
+                const durationinday = Math.ceil(duration / (1000 * 60 * 60 * 24));
+                data["data"]["items"] +=
+                    `\t\tTotal x ${durationinday} days : Rp. ${formatCurrency(items.total * durationinday)}`
+            }
+            orderText.value = orderTextTpl(data["data"]);
         }
 
         function maninputnum(id, by) {
