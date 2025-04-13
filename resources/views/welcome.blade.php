@@ -164,7 +164,7 @@
                         <div class="flex flex-col gap-2 mb-2">
                             <label for="register-nohp" class="text-sm md:text-lg font-bold">Nomor HP</label>
                             <input type="text" name="nohp" id="register-nohp"
-                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="nohp" required>
+                                class="text-sm md:text-lg border border-black rounded-md p-2" placeholder="Nomor HP" required>
                             @if ($errors->has('nohp'))
                                 <p class="text-red-500 text-sm">{{ $errors->first('nohp') }}</p>
                             @endif
