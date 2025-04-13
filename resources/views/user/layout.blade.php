@@ -21,6 +21,7 @@
 
 <body class="bg-netral relative">
     @include('includes.header')
+    @include('includes.alert')
     <main class="p-4 min-h-[85vh] relative overflow-x-hidden overflow-y-clip">
         @yield('content')
     </main>

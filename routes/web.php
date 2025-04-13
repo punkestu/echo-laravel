@@ -20,6 +20,7 @@ Route::prefix('auth')->group(function () {
     Route::post('set-nohp', [App\Http\Controllers\AuthController::class, 'setNoHp'])->middleware('auth')->name('set-nohp');
 });
 
+Route::get('/profile', [App\Http\Controllers\UserController::class, 'user_index'])->middleware('auth')->name('profile');
 Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'user_index'])->middleware(['auth'])->name('cart');
 
