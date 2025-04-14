@@ -23,7 +23,7 @@
                 @if (!auth()->user()->nohp)
                     <input type="text" name="nohp" id="nohp" value="{{ auth()->user()->nohp }}"
                         class="text-sm border border-gray-300 rounded-md px-2 py-1" placeholder="Nomor HP...">
-                    <button type="submit" class="bg-blue-500 text-white rounded-md px-3 py-1 mt-2">Simpan</button>
+                    <button type="submit" class="bg-light rounded-md px-3 py-1 mt-2">Simpan</button>
                 @else
                     <input type="text" name="nohp" id="nohp" value="{{ auth()->user()->nohp }}"
                         class="text-sm border border-gray-300 rounded-md px-2 py-1 bg-gray-300" disabled>

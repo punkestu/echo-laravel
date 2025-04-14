@@ -23,20 +23,19 @@ class AuthController
             ]
         );
         if ($validator->fails()) {
-            return redirect()->back()->with('alert', [
+            return redirect("/#auth")->with('alert', [
                 'type' => 'error',
                 'message' => 'Gagal masuk!'
             ])->withErrors($validator)->withInput();
         }
         $credentials = request()->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            request()->session()->regenerate();
-            return redirect()->back()->with('alert', [
+            return redirect("/")->with('alert', [
                 'type' => 'success',
                 'message' => 'Berhasil masuk!'
             ]);
         }
-        return redirect()->back()->with('alert', [
+        return redirect("/#auth")->with('alert', [
             'type' => 'error',
             'message' => 'Email atau password salah!'
         ]);
@@ -64,7 +63,7 @@ class AuthController
             ]
         );
         if ($validator->fails()) {
-            return redirect()->back()->with('alert', [
+            return redirect("/#auth")->with('alert', [
                 'type' => 'error',
                 'message' => 'Gagal mendaftar!'
             ])->withErrors($validator)->withInput();
@@ -77,8 +76,7 @@ class AuthController
         $user->role = request('role', 'user');
         $user->save();
         Auth::login($user);
-        request()->session()->regenerate();
-        return redirect()->back()->with('alert', [
+        return redirect("/")->with('alert', [
             'type' => 'success',
             'message' => 'Berhasil mendaftar!'
         ]);

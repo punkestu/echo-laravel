@@ -7,7 +7,14 @@
                 Tambahkan item baru ke dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
             </p>
         </div>
-        <a href="{{ route('dashboard.item') }}" class="text-sm bg-red-500 text-white px-3 py-1 rounded-md">x Kembali</a>
+        <a href="{{ route('dashboard.item') }}">
+            <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd"
+                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                    clip-rule="evenodd" />
+            </svg>
+        </a>
     </section>
     <section class="mt-6">
         <form action="{{ route('dashboard.item.store') }}" method="POST" enctype="multipart/form-data">
@@ -135,7 +142,14 @@
                 <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
                     <span>${selectedTypeText}</span>
                     <input type="hidden" name="types[]" value="${selectedType}">
-                    <button type="button" class="text-red-500" onclick="this.parentElement.remove()">x</button>
+                    <button type="button" class="text-red-500" onclick="this.parentElement.remove()">
+                        <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                 </div>
             `);
             event.target.value = "";
