@@ -14,4 +14,32 @@ class UserController
             'user' => $user
         ]);
     }
+
+    public function index()
+    {
+        $users = \App\Models\User::with([]);
+        $orderBy = request('orderBy');
+        $desc = request('desc');
+        $search = request('search');
+        if ($search) {
+            $users = $users->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('nohp', 'like', "%{$search}%");
+        }
+        if ($orderBy) {
+            $specialorderby = ['total_pesan', 'total_pengeluaran'];
+            if (in_array($orderBy, $specialorderby)) {
+            } else {
+                $users = $users->orderBy($orderBy, $desc ? 'desc' : 'asc');
+            }
+        }
+        $users = $users->get();
+        return view('dashboard.user.index', [
+            'users' => $users,
+            'search' => $search,
+            'orderBy' => $orderBy,
+            'desc' => $desc,
+            'params' => request()->all()
+        ]);
+    }
 }

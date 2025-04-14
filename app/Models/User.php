@@ -57,4 +57,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function nohp_withcode()
+    {
+        if (str_starts_with($this->nohp, '0')) {
+            return '+62' . substr($this->nohp, 1);
+        } elseif (str_starts_with($this->nohp, '62')) {
+            return '+' . $this->nohp;
+        } elseif (str_starts_with($this->nohp, '+62')) {
+            return $this->nohp;
+        };
+    }
 }

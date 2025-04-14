@@ -53,4 +53,7 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
         Route::post('/update/{id}', [App\Http\Controllers\ItemTypeController::class, 'update'])->name('dashboard.item-type.update');
         Route::get('/delete/{id}', [App\Http\Controllers\ItemTypeController::class, 'destroy'])->name('dashboard.item-type.delete');
     });
+    Route::prefix("/user")->group(function () {
+        Route::get("/", [App\Http\Controllers\UserController::class, 'index'])->name('dashboard.user');
+    });
 });

@@ -25,6 +25,7 @@
             'Katalog' => route('dashboard.catalog'),
             'Gudang' => route('dashboard.item'),
             'Tipe Item' => route('dashboard.item-type'),
+            'User' => route('dashboard.user'),
         ];
     @endphp
     <div class="flex flex-col md:flex-row gap-x-2 px-4 md:h-[85vh] mt-4 overflow-y-auto">
