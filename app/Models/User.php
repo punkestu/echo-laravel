@@ -60,12 +60,26 @@ class User extends Authenticatable
 
     public function nohp_withcode()
     {
-        if (str_starts_with($this->nohp, '0')) {
-            return '+62' . substr($this->nohp, 1);
-        } elseif (str_starts_with($this->nohp, '62')) {
-            return '+' . $this->nohp;
-        } elseif (str_starts_with($this->nohp, '+62')) {
-            return $this->nohp;
-        };
+        // remove all non-numeric characters
+        $nohp = preg_replace('/[\-]/', '', $this->nohp);
+        if (str_starts_with($nohp, '0')) {
+            return '+62' . substr($nohp, 1);
+        } elseif (str_starts_with($nohp, '62')) {
+            return '+' . $nohp;
+        } elseif (str_starts_with($nohp, '+62')) {
+            return $nohp;
+        }
+
+        return $nohp;
+    }
+
+    public function order_count()
+    {
+        return $this->hasMany(Order::class)->count();
+    }
+
+    public function order_price_sum()
+    {
+        return $this->hasMany(Order::class)->sum('price');
     }
 }

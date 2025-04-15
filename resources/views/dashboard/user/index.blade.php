@@ -164,6 +164,12 @@
                             <a href="https://wa.me/{{ $item->nohp_withcode() }}" target="_blank"
                                 class="underline text-blue-500">{{ $item->nohp }}</a>
                         </td>
+                        <td class="px-2 pt-1 pb-2 align-top text-center">
+                            {{ $item->order_count() }}
+                        </td>
+                        <td class="px-2 pt-1 pb-2 align-top text-center">
+                            Rp. {{ number_format($item->order_price_sum(), 0, ',', '.') }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
