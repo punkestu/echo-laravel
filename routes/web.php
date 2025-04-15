@@ -29,6 +29,15 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
     'admin'
 ]], function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'route'])->name('dashboard');
+    Route::prefix("/order")->group(function () {
+        Route::get("/", [App\Http\Controllers\OrderController::class, 'index'])->name('dashboard.order');
+        Route::get("/create", [App\Http\Controllers\OrderController::class, 'create'])->name('dashboard.order.create');
+        Route::post("/store", [App\Http\Controllers\OrderController::class, 'store'])->name('dashboard.order.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\OrderController::class, 'edit'])->name('dashboard.order.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\OrderController::class, 'update'])->name('dashboard.order.update');
+        Route::post("/put/status/{id}", [App\Http\Controllers\OrderController::class, 'updateStatus'])->name('dashboard.order.put-status');
+        Route::get("/delete/{id}", [App\Http\Controllers\OrderController::class, 'destroy'])->name('dashboard.order.delete');
+    });
     Route::prefix("/catalog")->group(function () {
         Route::get("/", [App\Http\Controllers\CatalogController::class, 'index'])->name('dashboard.catalog');
         Route::get("/create", [App\Http\Controllers\CatalogController::class, 'create'])->name('dashboard.catalog.create');

@@ -42,4 +42,22 @@ class UserController
             'params' => request()->all()
         ]);
     }
+
+    public function api_getUsers(Request $request)
+    {
+        $users = \App\Models\User::with([]);
+        $search = $request->input('search');
+        if ($search) {
+            $users = $users->where('name', 'like', "%{$search}%")
+                ->orWhere('nohp', 'like', "%{$search}%");
+        }
+        return response()->json([
+            'data' => $users->get(),
+            'message' => 'success',
+            'meta' => [
+                'total' => $users->count(),
+                'search' => $search,
+            ]
+        ]);
+    }
 }

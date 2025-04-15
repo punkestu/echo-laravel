@@ -17,6 +17,14 @@ button {
     @apply cursor-pointer;
 }
 
+button:disabled {
+    @apply cursor-not-allowed;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+    @apply cursor-not-allowed bg-gray-100;
+}
+
 [popover]::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
 }

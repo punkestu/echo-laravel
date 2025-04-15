@@ -9,6 +9,8 @@
 
     @include('includes.attributes')
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="icon" href="/favicon.svg">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -22,6 +24,7 @@
     @include('includes.header')
     @php
         $nav = [
+            'Order' => route('dashboard.order'),
             'Katalog' => route('dashboard.catalog'),
             'Gudang' => route('dashboard.item'),
             'Tipe Item' => route('dashboard.item-type'),
