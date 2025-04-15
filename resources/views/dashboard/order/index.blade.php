@@ -115,7 +115,7 @@
                         </td>
                         <td class="border-b py-1 px-2 w-auto">
                             <div class="flex justify-center gap-2">
-                                {{-- <a href="{{ route('dashboard.order', ['filter_type' => $item->id]) }}"
+                                <button onclick="toggleModal('item-list-modal', loadItemListModal({{ $item->id }}))"
                                     class="bg-blue-500 text-white rounded-sm px-3 py-1">
                                     <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@
                                             stroke-width="2"
                                             d="M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
                                     </svg>
-                                </a> --}}
+                                </button>
                                 <a href="{{ route('dashboard.order.edit', $item->id) }}"
                                     class="bg-light rounded-sm px-3 py-1">
                                     <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -136,8 +136,8 @@
                                 <button
                                     onclick="toggleModal('delete-item-modal', setDeleteUrl('{{ route('dashboard.order.delete', $item->id) }}'))"
                                     class="bg-red-500 text-white rounded-sm px-3 py-1"><svg class="w-6 h-6 text-white"
-                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2"
                                             d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
@@ -169,12 +169,62 @@
             </section>
         </div>
     </div>
+    <div id="item-list-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('item-list-modal')"></button>
+        <div class="bg-white rounded-md shadow-lg mx-4 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
+            <section class="flex justify-end gap-2">
+                <button onclick="closeModal('item-list-modal')">
+                    <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </section>
+            <div class="flex flex-col mb-2">
+                <h4 class="font-bold">List Item</h4>
+                <p>Siapkan item untuk pemesan</p>
+                <div id="item-list" class="flex flex-wrap gap-2">
+                    <span class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">Hello
+                        X 10
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script>
         function setDeleteUrl(url) {
             return () => {
                 document.getElementById('delete-item-modal').querySelector('a').href = url;
+            }
+        }
+
+        function loadItemListModal(id) {
+            return async () => {
+                const url = "{{ route('api.order.items', ':id') }}".replace(':id', id);
+                const auth_token = await getToken();
+                fetch(url, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Authorization': `Bearer ${auth_token.token}`,
+                        },
+                    }).then(res => res.json())
+                    .then(data => {
+                        const itemList = document.getElementById('item-list');
+                        itemList.innerHTML = '';
+                        data.items.forEach(item => {
+                            const span = document.createElement('span');
+                            span.className =
+                                'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                            span.innerHTML =
+                                `${item.name} X ${item.qty}`;
+                            itemList.appendChild(span);
+                        });
+                    });
             }
         }
     </script>

@@ -1,20 +1,20 @@
 import "./bootstrap";
 
-function toggleModal(idmodal, callback) {
+async function toggleModal(idmodal, callback) {
     const modal = document.getElementById(idmodal);
     modal.classList.toggle("hidden");
     modal.classList.toggle("flex");
     if (callback) {
-        callback();
+        await callback();
     }
 }
 
-function closeModal(idmodal, callback) {
+async function closeModal(idmodal, callback) {
     const modal = document.getElementById(idmodal);
     modal.classList.add("hidden");
     modal.classList.remove("flex");
     if (callback) {
-        callback();
+        await callback();
     }
 }
 

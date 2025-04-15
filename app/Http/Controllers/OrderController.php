@@ -330,4 +330,32 @@ class OrderController
             'message' => 'Order deleted successfully.',
         ]);
     }
+
+    public function api_getItems($id)
+    {
+        $items = Order::with(["catalogs" => function ($query) {
+            $query->withPivot('qty')->with(['items' => function ($query) {
+                $query->withPivot('qty')->select(['items.id', 'name']);
+            }])->select(['catalogs.id', 'name']);
+        }])->findOrFail($id);
+
+        $items = $items->catalogs->reduce(function ($carry, $catalog) {
+            foreach ($catalog->items as $item) {
+                if (!isset($carry[$item->id])) {
+                    $carry[$item->id] = [
+                        'name' => $item->name,
+                        'qty' => $catalog->pivot->qty * $item->pivot->qty,
+                    ];
+                } else {
+                    $carry[$item->id]['qty'] += $catalog->pivot->qty * $item->pivot->qty;
+                }
+            }
+            return $carry;
+        }, []);
+        $items = array_values($items);
+
+        return response()->json([
+            'items' => $items
+        ]);
+    }
 }
