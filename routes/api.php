@@ -13,4 +13,5 @@ Route::group(['prefix' => '/cart', 'middleware' => ['auth:sanctum']], function (
 });
 
 Route::get('/users', [App\Http\Controllers\UserController::class, 'api_getUsers'])->middleware('auth:sanctum')->name('api.users');
+Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'api_getCustomers'])->middleware('auth:sanctum')->name('api.customers');
 Route::get('/order/{id}/items', [App\Http\Controllers\OrderController::class, 'api_getItems'])->middleware('auth:sanctum')->name('api.order.items');

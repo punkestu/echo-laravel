@@ -37,6 +37,9 @@
                 <input type="text" name="name" id="name" required
                     class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Masukkan nama pemesan" value="{{ old('name') }}">
+                <div id="customer-list-name"
+                    class="hidden bg-white mt-2 px-2 py-1 w-96 max-w-full max-h-52 overflow-y-auto">
+                </div>
                 @if ($errors->has('name'))
                     <p class="text-red-500 text-sm">{{ $errors->first('name') }}</p>
                 @endif
@@ -46,6 +49,9 @@
                 <input type="text" name="nohp" id="nohp" required
                     class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Masukkan no hp pemesan" value="{{ old('nohp') }}">
+                <div id="customer-list-nohp"
+                    class="hidden bg-white mt-2 px-2 py-1 w-96 max-w-full max-h-52 overflow-y-auto">
+                </div>
                 @if ($errors->has('nohp'))
                     <p class="text-red-500 text-sm">{{ $errors->first('nohp') }}</p>
                 @endif
@@ -198,36 +204,48 @@
             count++;
         });
 
-        document.querySelector('#member').addEventListener('input', async function(event) {
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        document.querySelector('#member').addEventListener('input', function(event) {
             const query = event.target.value;
+            const memberList = document.querySelector('#member-list');
             if (query.length > 2) {
-                const url = "{{ route('api.users') }}";
-                const auth_token = await getToken();
-                fetch(`${url}?search=${query}`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Authorization': `Bearer ${auth_token.token}`,
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.meta.total > 0) {
-                            const memberList = document.querySelector('#member-list');
-                            memberList.innerHTML = "";
-                            data.data.forEach(member => {
-                                memberList.insertAdjacentHTML('beforeend', `
+                memberList.classList.remove('hidden');
+                memberList.innerHTML = "Loading...";
+                debounce(async () => {
+                    const url = "{{ route('api.users') }}";
+                    const auth_token = await getToken();
+                    fetch(`${url}?search=${query}`, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Authorization': `Bearer ${auth_token.token}`,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.meta.total > 0) {
+                                memberList.innerHTML = "";
+                                data.data.forEach(member => {
+                                    memberList.insertAdjacentHTML('beforeend', `
                                 <button type="button" onclick="setUserID(${member.id}, '${member.name}', '${member.nohp ?? ""}')"
                                 class="p-1 hover:border w-full text-start">${member.name} | ${member.nohp ?? "-"}</button>
                                 `);
-                            });
-                            memberList.classList.remove('hidden');
-                        } else {
-                            document.querySelector('#member-list').classList.add('hidden');
-                        }
-                    });
+                                });
+                            } else {
+                                memberList.innerHTML = "Tidak ada hasil";
+                            }
+                        });
+                }, 3000)();
             } else {
-                document.querySelector('#member-list').classList.add('hidden');
+                memberList.classList.add('hidden');
             }
         });
 
@@ -242,6 +260,118 @@
                 document.querySelector('#member-list').classList.remove('hidden');
             }
         });
+
+        document.querySelector('#name').addEventListener('input', function(event) {
+            resetUserID();
+            const name = event.target.value;
+            const customerList = document.querySelector('#customer-list-name');
+            if (name.length > 2) {
+                customerList.classList.remove('hidden');
+                customerList.innerHTML = "Loading...";
+                debounce(async () => {
+                    const url = "{{ route('api.customers') }}";
+                    const auth_token = await getToken();
+                    fetch(`${url}?name=${name}`, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Authorization': `Bearer ${auth_token.token}`,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.meta.total > 0) {
+                                customerList.innerHTML = "";
+                                data.data.forEach(customer => {
+                                    customerList.insertAdjacentHTML('beforeend', `
+                                <button type="button" onclick="setCustomer('${customer.name}', '${customer.phone ?? ""}')"
+                                class="p-1 hover:border w-full text-start">${customer.name} | ${customer.phone ?? "-"}</button>
+                                `);
+                                });
+                            } else {
+                                customerList.innerHTML = "Tidak ada hasil";
+                            }
+                        });
+                }, 3000)();
+            } else {
+                customerList.classList.add('hidden');
+            }
+        });
+
+        document.querySelector('#name').addEventListener('blur', function(event) {
+            setTimeout(() => {
+                document.querySelector('#customer-list-name').classList.add('hidden');
+            }, 200);
+        });
+
+        document.querySelector('#name').addEventListener('focus', function(event) {
+            if (event.target.value.length > 2) {
+                document.querySelector('#customer-list-name').classList.remove('hidden');
+            }
+        });
+
+        document.querySelector('#nohp').addEventListener('input', function(event) {
+            resetUserID();
+            const nohp = event.target.value;
+            const customerList = document.querySelector('#customer-list-nohp');
+            if (nohp.length > 2) {
+                customerList.classList.remove('hidden');
+                customerList.innerHTML = "Loading...";
+                debounce(async () => {
+                    const url = "{{ route('api.customers') }}";
+                    const auth_token = await getToken();
+                    fetch(`${url}?phone=${nohp}`, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Authorization': `Bearer ${auth_token.token}`,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.meta.total > 0) {
+                                customerList.innerHTML = "";
+                                data.data.forEach(customer => {
+                                    customerList.insertAdjacentHTML('beforeend', `
+                                <button type="button" onclick="setCustomer('${customer.name}', '${customer.phone ?? ""}')"
+                                class="p-1 hover:border w-full text-start">${customer.name} | ${customer.phone ?? "-"}</button>
+                                `);
+                                });
+                            } else {
+                                customerList.innerHTML = "Tidak ada hasil";
+                            }
+                        });
+                }, 3000);
+            } else {
+                customerList.classList.add('hidden');
+            }
+        });
+
+        document.querySelector('#nohp').addEventListener('blur', function(event) {
+            setTimeout(() => {
+                document.querySelector('#customer-list-nohp').classList.add('hidden');
+            }, 200);
+        });
+
+        document.querySelector('#nohp').addEventListener('focus', function(event) {
+            if (event.target.value.length > 2) {
+                document.querySelector('#customer-list-nohp').classList.remove('hidden');
+            }
+        });
+
+        function setCustomer(name, nohp) {
+            document.querySelector('#customer-list-name').classList.add('hidden');
+            document.querySelector('#customer-list-nohp').classList.add('hidden');
+
+            document.querySelector('#name').value = name;
+            document.querySelector('#nohp').value = nohp ?? "";
+        }
+
+        function resetUserID() {
+            document.querySelector('input[name="user_id"]').value = "";
+            document.querySelector('#member').value = "";
+            document.querySelector('#member-list').classList.add('hidden');
+        }
 
         function setUserID(id, name, nohp) {
             document.querySelector('input[name="user_id"]').value = id;

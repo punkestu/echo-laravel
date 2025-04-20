@@ -183,6 +183,8 @@ class OrderController
             $order->catalogs()->attach($catalog['id'], ['qty' => $catalog['qty']]);
         }
 
+        \App\Models\Customer::registernewCustomer($request->name, $request->nohp);
+
         return redirect()->route('dashboard.order')->with('success', 'Order created successfully.');
     }
 
