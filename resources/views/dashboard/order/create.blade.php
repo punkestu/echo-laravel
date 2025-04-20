@@ -176,6 +176,11 @@
             </div>
             <div class="border p-2 rounded-md">
                 <h3 class="text-sm font-bold">Total Order</h3>
+                <div>
+                    <span>-</span>
+                    <input type="number" name="discount" id="discount" placeholder="discount" class="px-2 py-1"
+                        value="{{ old('discount') }}">
+                </div>
                 <h2 id="price" class="text-xl font-black">Rp. 0</h2>
                 <input type="hidden" name="price" id="price-input">
                 <button type="submit"
@@ -199,10 +204,16 @@
                     totalPrice += price * qty;
                 }
             });
-            document.querySelector('#price').innerText = "Rp. " + totalPrice.toLocaleString('id-ID');
+            const discount = parseInt(document.querySelector('#discount').value);
+            document.querySelector('#price').innerText = "Rp. " + (totalPrice - (discount ? discount : 0)).toLocaleString(
+                'id-ID');
             document.querySelector('#price-input').value = totalPrice;
         }
         setTotalPrice();
+
+        document.querySelector('#discount').addEventListener('input', function() {
+            setTotalPrice();
+        });
 
         function setItemOrderAction() {
             const items = document.querySelectorAll('.item-order');
@@ -286,7 +297,7 @@
                                 memberList.innerHTML = "Tidak ada hasil";
                             }
                         });
-                }, 3000)();
+                }, 1000)();
             } else {
                 memberList.classList.add('hidden');
             }
@@ -335,7 +346,7 @@
                                 customerList.innerHTML = "Tidak ada hasil";
                             }
                         });
-                }, 3000)();
+                }, 1000)();
             } else {
                 customerList.classList.add('hidden');
             }
@@ -384,7 +395,7 @@
                                 customerList.innerHTML = "Tidak ada hasil";
                             }
                         });
-                }, 3000);
+                }, 1000)();
             } else {
                 customerList.classList.add('hidden');
             }

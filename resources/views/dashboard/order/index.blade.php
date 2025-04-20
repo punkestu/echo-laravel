@@ -79,7 +79,8 @@
                             <input type="hidden" name="bukti_dp-{{ $item->id }}" value="{{ $item->bukti_dp }}">
                             <input type="hidden" name="bukti_lunas-{{ $item->id }}" value="{{ $item->bukti_lunas }}">
                             <input type="hidden" name="bukti_dibawa-{{ $item->id }}" value="{{ $item->bukti_dibawa }}">
-                            <input type="hidden" name="bukti_kembali-{{ $item->id }}" value="{{ $item->bukti_kembali }}">
+                            <input type="hidden" name="bukti_kembali-{{ $item->id }}"
+                                value="{{ $item->bukti_kembali }}">
                         </td>
                         <td class="border-b py-1 px-2 w-1">
                             <form id="update-status-{{ $item->id }}"
@@ -121,7 +122,13 @@
                         <td class="border-b py-1 px-2 w-28">{{ $item->tempat_cod }}</td>
                         <td class="border-b py-1 px-2 w-1 text-center">{{ $item->jam_ambil }}</td>
                         <td class="border-b py-1 px-2 w-1 text-center">{{ $item->jam_kembali }}</td>
-                        <td class="border-b py-1 px-2 w-1 text-right">Rp. {{ number_format($item->price, 0, ',', '.') }}
+                        <td class="border-b py-1 px-2 w-1 text-right">
+                            @if ($item->discount > 0)
+                                <span class="line-through text-gray-400">Rp.
+                                    {{ number_format($item->price, 0, ',', '.') }}
+                                </span>
+                            @endif
+                            Rp. {{ number_format($item->theprice(), 0, ',', '.') }}
                         </td>
                         <td class="border-b py-1 px-2 w-auto">
                             <div class="flex justify-center gap-2">

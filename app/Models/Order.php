@@ -18,6 +18,7 @@ class Order extends Model
         'jam_kembali',
         'status',
         'price',
+        'discount',
         'bukti_dp',
         'bukti_lunas',
         'bukti_dibawa',
@@ -27,6 +28,11 @@ class Order extends Model
     public function catalogs()
     {
         return $this->belongsToMany(Catalog::class, 'order_catalogs');
+    }
+
+    public function theprice()
+    {
+        return $this->price - $this->discount;
     }
 
     public function user()

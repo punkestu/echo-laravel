@@ -94,13 +94,13 @@ class OrderController
         ];
         $status_disabled = [
             'dipesan' => ['name', 'nohp', 'alamat'],
-            'DP' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp'],
-            'lunas' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp', 'bukti_lunas'],
-            'diproses' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp', 'bukti_lunas'],
-            'dibawa' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'jam_kembali', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa'],
-            'dikembalikan' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali'],
-            'selesai' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali'],
-            'batal' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali'],
+            'DP' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp', 'discount'],
+            'lunas' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp', 'bukti_lunas', 'discount'],
+            'diproses' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'bukti_dp', 'bukti_lunas', 'discount'],
+            'dibawa' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'jam_kembali', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'discount'],
+            'dikembalikan' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali', 'discount'],
+            'selesai' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali', 'discount'],
+            'batal' => ['name', 'nohp', 'alamat', 'catalogs', 'dp', 'jaminan', 'pengambilan', 'tempat_cod', 'jam_ambil', 'bukti_dp', 'bukti_lunas', 'bukti_dibawa', 'bukti_kembali', 'discount'],
         ];
         return view('dashboard.order.edit', [
             'order' => $order,
@@ -125,6 +125,7 @@ class OrderController
             'jam_ambil' => 'required|date_format:Y-m-d\TH:i',
             'jam_kembali' => 'required|date_format:Y-m-d\TH:i',
             'price' => 'required|integer|min:0',
+            'discount' => 'nullable|integer|min:0',
             'catalogs' => 'required|array',
             'catalogs.*.id' => 'exists:catalogs,id',
             'catalogs.*.qty' => 'required|integer|min:1',
@@ -180,6 +181,7 @@ class OrderController
             'jam_kembali' => $request->jam_kembali,
             'status' => 'dipesan',
             'price' => $request->price,
+            'discount' => $request->discount ?? 0,
         ]);
         foreach ($request->catalogs as $catalog) {
             $order->catalogs()->attach($catalog['id'], ['qty' => $catalog['qty']]);
@@ -213,6 +215,11 @@ class OrderController
                 'date_format:Y-m-d\TH:i'
             ],
             'price' => [
+                Rule::requiredIf(in_array($order->status, ['dipesan'])),
+                'integer',
+                'min:0'
+            ],
+            'discount' => [
                 Rule::requiredIf(in_array($order->status, ['dipesan'])),
                 'integer',
                 'min:0'
@@ -301,6 +308,7 @@ class OrderController
             $order->jam_ambil = $request->jam_ambil;
             $order->jam_kembali = $request->jam_kembali;
             $order->price = $request->price;
+            $order->discount = $request->discount ?? 0;
             if ($request->hasFile('bukti_dp')) {
                 $order->bukti_dp = $request->file('bukti_dp')->store('uploads/bukti_dp', 'public');
             }
