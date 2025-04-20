@@ -160,7 +160,7 @@
                         alert('Berhasil menambahkan ke keranjang');
                         closeModal('detail-catalog-modal');
                     } else {
-                        alert('Gagal menambahkan ke keranjang');
+                        alert('Gagal menambahkan ke keranjang. Coba lagi nanti.');
                     }
                 })
                 .catch(error => {

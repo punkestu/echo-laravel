@@ -327,7 +327,7 @@
                         }
                         alert('Berhasil menghapus item dari keranjang');
                     } else {
-                        alert('Gagal menghapus item dari keranjang');
+                        alert('Gagal menghapus item dari keranjang. Coba lagi nanti.');
                     }
                 });
         }

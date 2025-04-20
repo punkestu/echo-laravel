@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController
 {
@@ -99,12 +100,25 @@ class AuthController
     {
         if (Auth::check()) {
             $user = \App\Models\User::where('id', Auth::id())->first();
-            $token = $user->createToken('api-token');
-            return response()->json(['token' => $token->plainTextToken]);
+            $token = $user->createToken('api-token')->plainTextToken;
+            return response()->json(['token' => $token]);
         }
         return response()->json([
             'error' => 'Unauthorized'
         ], 401);
+    }
+
+    public function api_validateToken()
+    {
+        $token = request()->bearerToken();
+        if (!$token) {
+            return response()->json(['valid' => false], 401);
+        }
+        $accessToken = PersonalAccessToken::findToken($token);
+        if (!$accessToken || ! $accessToken->tokenable) {
+            return response()->json(['valid' => false], 401);
+        }
+        return response()->json(['valid' => true]);
     }
 
     public function setNoHp()

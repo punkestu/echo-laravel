@@ -18,7 +18,7 @@ class CartController
         ]);
     }
 
-    public function add(Request $request)
+    public function api_add(Request $request)
     {
         $user = User::find(Auth::id());
         $cart = $user->carts()->where('catalog_id', $request->catalog_id)->first();
@@ -38,7 +38,7 @@ class CartController
         ]);
     }
 
-    public function remove($id)
+    public function api_remove($id)
     {
         $cart = Cart::where('user_id', Auth::id())
             ->where('id', $id)

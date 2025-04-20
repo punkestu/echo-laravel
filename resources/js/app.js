@@ -18,11 +18,11 @@ async function closeModal(idmodal, callback) {
     }
 }
 
-async function getToken() {
+async function fetchToken() {
     await fetch("/sanctum/csrf-cookie", {
         credentials: "include",
     });
-    return fetch("/auth/generate-token", {
+    const res = await fetch("/auth/generate-token", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -37,6 +37,30 @@ async function getToken() {
         .catch((err) => {
             window.location.href = "/logout";
         });
+    if (res.token) {
+        localStorage.setItem("auth_token", res.token);
+    }
+}
+
+async function getToken() {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+        await fetchToken();
+    }
+    if (token) {
+        fetch("/api/validate-token", {
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        }).then((res) => {
+            if (res.status === 401) {
+                localStorage.removeItem("auth_token");
+                fetchToken();
+            }
+        });
+    }
+    return { token: localStorage.getItem("auth_token") };
 }
 
 window.toggleModal = toggleModal;
