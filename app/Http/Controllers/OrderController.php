@@ -230,13 +230,13 @@ class OrderController
                 'max:2048'
             ],
             'bukti_dibawa' => [
-                Rule::requiredIf(in_array($request->status, ['diproses']) && $order->bukti_dibawa == null),
+                Rule::requiredIf(in_array($request->status, ['dibawa']) && $order->bukti_dibawa == null),
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:2048'
             ],
             'bukti_kembali' => [
-                Rule::requiredIf(in_array($request->status, ['dibawa']) && $order->bukti_kembali == null),
+                Rule::requiredIf(in_array($request->status, ['dikembalikan']) && $order->bukti_kembali == null),
                 'image',
                 'mimes:jpeg,png,jpg,gif',
                 'max:2048'

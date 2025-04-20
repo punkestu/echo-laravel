@@ -85,12 +85,12 @@
                 </div>
             @endif
             @if ($order->status == 'dibawa')
-                <div id="bukti-dikembalikan-container" class="mb-4">
-                    <label for="bukti_dikembalikan" class="block text-sm font-medium text-gray-700">Bukti Dikembalikan</label>
-                    <input type="file" name="bukti_dikembalikan" id="bukti_dikembalikan" accept=".jpg,.jpeg,.png,.gif"
+                <div id="bukti-kembali-container" class="mb-4">
+                    <label for="bukti_kembali" class="block text-sm font-medium text-gray-700">Bukti Kembali</label>
+                    <input type="file" name="bukti_kembali" id="bukti_kembali" accept=".jpg,.jpeg,.png,.gif"
                         class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    @if ($errors->has('bukti_dikembalikan'))
-                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_dikembalikan') }}</p>
+                    @if ($errors->has('bukti_kembali'))
+                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_kembali') }}</p>
                     @endif
                 </div>
             @endif
