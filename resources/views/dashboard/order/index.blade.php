@@ -77,6 +77,9 @@
                         <td class="border-b py-1 px-2 w-1 text-center">
                             {{ $item->id }}
                             <input type="hidden" name="bukti_dp-{{ $item->id }}" value="{{ $item->bukti_dp }}">
+                            <input type="hidden" name="bukti_lunas-{{ $item->id }}" value="{{ $item->bukti_lunas }}">
+                            <input type="hidden" name="bukti_dibawa-{{ $item->id }}" value="{{ $item->bukti_dibawa }}">
+                            <input type="hidden" name="bukti_kembali-{{ $item->id }}" value="{{ $item->bukti_kembali }}">
                         </td>
                         <td class="border-b py-1 px-2 w-1">
                             <form id="update-status-{{ $item->id }}"
@@ -223,6 +226,33 @@
                         'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
                     span.innerHTML =
                         `<a href="/storage/${bukti_dp.value}" target="_blank" class="underline">Bukti DP</a>`;
+                    bukti.appendChild(span);
+                }
+                const bukti_lunas = document.querySelector(`input[name="bukti_lunas-${id}"]`);
+                if (bukti_lunas.value) {
+                    const span = document.createElement('span');
+                    span.className =
+                        'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                    span.innerHTML =
+                        `<a href="/storage/${bukti_lunas.value}" target="_blank" class="underline">Bukti Lunas</a>`;
+                    bukti.appendChild(span);
+                }
+                const bukti_dibawa = document.querySelector(`input[name="bukti_dibawa-${id}"]`);
+                if (bukti_dibawa.value) {
+                    const span = document.createElement('span');
+                    span.className =
+                        'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                    span.innerHTML =
+                        `<a href="/storage/${bukti_dibawa.value}" target="_blank" class="underline">Bukti Dibawa</a>`;
+                    bukti.appendChild(span);
+                }
+                const bukti_kembali = document.querySelector(`input[name="bukti_kembali-${id}"]`);
+                if (bukti_kembali.value) {
+                    const span = document.createElement('span');
+                    span.className =
+                        'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                    span.innerHTML =
+                        `<a href="/storage/${bukti_kembali.value}" target="_blank" class="underline">Bukti Kembali</a>`;
                     bukti.appendChild(span);
                 }
                 const url = "{{ route('api.order.items', ':id') }}".replace(':id', id);
