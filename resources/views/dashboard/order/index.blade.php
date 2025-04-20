@@ -213,6 +213,18 @@
 
         function loadItemListModal(id) {
             return async () => {
+                const itemList = document.getElementById('item-list');
+                itemList.innerHTML = "Loading...";
+                const bukti = document.getElementById('bukti');
+                const bukti_dp = document.querySelector(`input[name="bukti_dp-${id}"]`);
+                if (bukti_dp.value) {
+                    const span = document.createElement('span');
+                    span.className =
+                        'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                    span.innerHTML =
+                        `<a href="/storage/${bukti_dp.value}" target="_blank" class="underline">Bukti DP</a>`;
+                    bukti.appendChild(span);
+                }
                 const url = "{{ route('api.order.items', ':id') }}".replace(':id', id);
                 const auth_token = await getToken();
                 fetch(url, {
@@ -223,7 +235,6 @@
                         },
                     }).then(res => res.json())
                     .then(data => {
-                        const itemList = document.getElementById('item-list');
                         itemList.innerHTML = '';
                         data.items.forEach(item => {
                             const span = document.createElement('span');
@@ -233,16 +244,6 @@
                                 `${item.name} X ${item.qty}`;
                             itemList.appendChild(span);
                         });
-                        const bukti_dp = document.querySelector(`input[name="bukti_dp-${id}"]`);
-                        const bukti = document.getElementById('bukti');
-                        if (bukti_dp.value) {
-                            const span = document.createElement('span');
-                            span.className =
-                                'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
-                            span.innerHTML =
-                                `<a href="/storage/${bukti_dp.value}" target="_blank" class="underline">Bukti DP</a>`;
-                            bukti.appendChild(span);
-                        }
                     });
             }
         }
