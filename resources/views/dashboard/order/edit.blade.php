@@ -2,7 +2,7 @@
 @section('content')
     <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
-            <h3 class="text-xl font-bold">Ubah Order Baru</h3>
+            <h3 class="text-xl font-bold">Ubah Order</h3>
             <p class="text-sm text-justify hidden md:block">
                 Silahkan isi form dibawah ini untuk mengubah order. Pastikan semua data yang dimasukkan sudah
                 benar.
