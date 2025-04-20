@@ -2,9 +2,9 @@
 @section('content')
     <section class="flex justify-between items-start flex-wrap gap-2 mb-2">
         <div>
-            <h3 class="text-xl font-bold">Tambah Katalog Baru</h3>
+            <h3 class="text-xl font-bold">Ubah Katalog Baru</h3>
             <p class="text-sm text-justify hidden md:block">
-                Tambahkan katalog baru ke dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
+                Ubah katalog di dalam sistem. Pastikan untuk mengisi semua informasi yang diperlukan dengan benar.
             </p>
         </div>
         <a href="{{ route('dashboard.catalog') }}" class="text-sm bg-red-500 text-white px-3 py-1 rounded-md">x Kembali</a>
