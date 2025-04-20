@@ -105,8 +105,10 @@
                         <td class="border-b py-1 px-2 w-36 md:w-28 text-left">
                             <div class="flex gap-1 flex-wrap">
                                 @foreach ($item->catalogs as $catalog)
-                                    <span class="bg-blue-400 text-white rounded-full px-3 py-1 text-center">
-                                        {{ $catalog->name }} x {{ $catalog->pivot->qty }}
+                                    <span class="bg-blue-400 text-white rounded-full px-3 py-1 text-center"
+                                        title="{{ $catalog->name }} x {{ $catalog->pivot->qty }}">
+                                        {{ strlen($catalog->name) > 9 ? substr($catalog->name, 0, 9 - 3) . '...' : $catalog->name }}
+                                        x {{ $catalog->pivot->qty }}
                                     </span>
                                 @endforeach
                             </div>
