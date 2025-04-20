@@ -17,7 +17,11 @@ class Order extends Model
         'jam_ambil',
         'jam_kembali',
         'status',
-        'price'
+        'price',
+        'bukti_dp',
+        'bukti_lunas',
+        'bukti_dibawa',
+        'bukti_kembali',
     ];
 
     public function catalogs()

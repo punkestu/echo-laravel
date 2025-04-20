@@ -54,24 +54,65 @@
                     <p class="text-red-500 text-sm">{{ $errors->first('status') }}</p>
                 @endif
             </div>
+            @if ($order->status == 'dipesan')
+                <div id="bukti-dp-container" class="mb-4">
+                    <label for="bukti_dp" class="block text-sm font-medium text-gray-700">Bukti DP</label>
+                    <input type="file" name="bukti_dp" id="bukti_dp" accept=".jpg,.jpeg,.png,.gif"
+                        class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    @if ($errors->has('bukti_dp'))
+                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_dp') }}</p>
+                    @endif
+                </div>
+            @endif
+            @if ($order->status == 'dipesan' || $order->status == 'DP')
+                <div id="bukti-lunas-container" class="mb-4">
+                    <label for="bukti_lunas" class="block text-sm font-medium text-gray-700">Bukti Lunas</label>
+                    <input type="file" name="bukti_lunas" id="bukti_lunas" accept=".jpg,.jpeg,.png,.gif"
+                        class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    @if ($errors->has('bukti_lunas'))
+                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_lunas') }}</p>
+                    @endif
+                </div>
+            @endif
+            @if ($order->status == 'diproses')
+                <div id="bukti-dibawa-container" class="mb-4">
+                    <label for="bukti_dibawa" class="block text-sm font-medium text-gray-700">Bukti Dibawa</label>
+                    <input type="file" name="bukti_dibawa" id="bukti_dibawa" accept=".jpg,.jpeg,.png,.gif"
+                        class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    @if ($errors->has('bukti_dibawa'))
+                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_dibawa') }}</p>
+                    @endif
+                </div>
+            @endif
+            @if ($order->status == 'dibawa')
+                <div id="bukti-dikembalikan-container" class="mb-4">
+                    <label for="bukti_dikembalikan" class="block text-sm font-medium text-gray-700">Bukti Dikembalikan</label>
+                    <input type="file" name="bukti_dikembalikan" id="bukti_dikembalikan" accept=".jpg,.jpeg,.png,.gif"
+                        class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    @if ($errors->has('bukti_dikembalikan'))
+                        <p class="text-red-500 text-sm">{{ $errors->first('bukti_dikembalikan') }}</p>
+                    @endif
+                </div>
+            @endif
             <div class="mb-4">
                 <label for="catalog" class="block text-sm font-medium text-gray-700">Item Katalog</label>
                 <div id="catalog-list" class="flex gap-2">
-                    @if (old('catalogs'))
+                    @if (old('catalogs') && !in_array('catalogs', $status_disabled))
                         @foreach (old('catalogs') as $key => $itemqty)
                             @php
                                 $citem = $catalogs->find($itemqty['id']);
                             @endphp
-                            <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                            <div class="item-order text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full"
+                                data-price="{{ $citem->price }}">
                                 <span>{{ $citem->name }} | Rp. {{ number_format($citem->price, 0, '.', ',') }}</span> X
                                 <input type="hidden" name="catalogs[{{ $key }}][id]"
-                                    value="{{ $itemqty['id'] }}">
+                                    value="{{ $itemqty['id'] }}"
+                                    {{ in_array('catalogs', $status_disabled) ? 'disabled' : '' }}>
                                 <input type="number" name="catalogs[{{ $key }}][qty]"
                                     value="{{ $itemqty['qty'] }}" class="bg-white text-black px-2 py-1 w-14 rounded-md"
                                     {{ in_array('catalogs', $status_disabled) ? 'disabled' : '' }}>
                                 <button type="button" class="text-red-500"
-                                    {{ in_array('catalogs', $status_disabled) ? 'onclick="this.parentElement.remove()"' : '' }}
-                                    disabled>
+                                    {{ in_array('catalogs', $status_disabled) ? 'disabled' : 'onclick=this.parentElement.remove()' }}>
                                     <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd"
@@ -83,18 +124,20 @@
                         @endforeach
                     @else
                         @foreach ($order->catalogs as $key => $item)
-                            <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                            <div class="item-order text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full"
+                                data-price="{{ $item->price }}">
                                 <span>{{ $item->name }} | Rp. {{ number_format($item->price, 0, '.', ',') }}</span> X
                                 <input type="hidden" name="catalogs[{{ $key }}][id]"
-                                    value="{{ $item->id }}">
+                                    value="{{ $item->id }}"
+                                    {{ in_array('catalogs', $status_disabled) ? 'disabled' : '' }}>
                                 <input type="number" name="catalogs[{{ $key }}][qty]"
                                     value="{{ $item->pivot->qty }}" class="bg-white text-black px-2 py-1 w-14 rounded-md"
                                     {{ in_array('catalogs', $status_disabled) ? 'disabled' : '' }}>
                                 <button type="button" class="text-red-500"
-                                    {{ in_array('catalogs', $status_disabled) ? 'onclick="this.parentElement.remove()"' : '' }}
-                                    disabled>
-                                    <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    {{ in_array('catalogs', $status_disabled) ? 'disabled' : 'onclick=this.parentElement.remove()' }}>
+                                    <svg class="w-6 h-6 text-red-500" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd"
                                             d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
                                             clip-rule="evenodd" />
@@ -109,7 +152,7 @@
                     {{ in_array('catalogs', $status_disabled) ? 'disabled' : '' }}>
                     <option value="" disabled selected>Pilih katalog</option>
                     @foreach ($catalogs as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }} | Rp.
+                        <option value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} | Rp.
                             {{ number_format($item->price, 0, ',', '.') }}
                         </option>
                     @endforeach
@@ -193,21 +236,60 @@
                     @endif
                 </aside>
             </div>
-            <button type="submit"
-                class="bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Simpan
-                Order</button>
+            <div class="border p-2 rounded-md">
+                <h3 class="text-sm font-bold">Total Order</h3>
+                <h2 id="price" class="text-xl font-black">Rp. 0</h2>
+                <input type="hidden" name="price" id="price-input">
+                <button type="submit"
+                    class="mt-2 bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 w-full">Simpan
+                    Order</button>
+            </div>
         </form>
     </section>
 @endsection
 @section('scripts')
     <script>
+        function setTotalPrice() {
+            let totalPrice = 0;
+            const items = document.querySelectorAll('.item-order');
+            items.forEach(item => {
+                const price = parseInt(item.dataset.price);
+                const qty = parseInt(item.querySelector('input[type="number"]').value);
+                if (price && qty) {
+                    totalPrice += price * qty;
+                }
+            });
+            document.querySelector('#price').innerText = "Rp. " + totalPrice.toLocaleString('id-ID');
+            document.querySelector('#price-input').value = totalPrice;
+        }
+        setTotalPrice();
         @if (!in_array('catalogs', $status_disabled))
-            var count = {{ old('catalogs') ? count(old('catalogs')) : 0 }};
+            var count = {{ old('catalogs') ? count(old('catalogs')) : count($order->catalogs) }};
+
+            function setItemOrderAction() {
+                const items = document.querySelectorAll('.item-order');
+                items.forEach(item => {
+                    const qtyInput = item.querySelector('input[type="number"]');
+                    qtyInput.addEventListener('input', function() {
+                        setTotalPrice();
+                    });
+                    const qtyButton = item.querySelector('button');
+                    qtyButton.addEventListener('click', function() {
+                        setTotalPrice();
+                    });
+                });
+            }
+            setItemOrderAction();
+
             document.querySelector('#catalog').addEventListener('change', function(event) {
                 const selectedCatalog = event.target.value;
                 const selectedCatalogText = event.target.options[event.target.selectedIndex].text;
+                const selectedCatalogPrice = event.target.options[event.target.selectedIndex].dataset.price;
+                if (selectedCatalog == "") {
+                    return;
+                }
                 document.querySelector("#catalog-list").insertAdjacentHTML('beforeend', `
-                <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                <div class="item-order text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full" data-price="${selectedCatalogPrice}">
                     <span>${selectedCatalogText}</span>
                     <input type="hidden" name="catalogs[${count}][id]" value="${selectedCatalog}"> X
                     <input type="number" name="catalogs[${count}][qty]" class="bg-white text-black px-2 py-1 w-14 rounded-md">
@@ -221,6 +303,8 @@
                     </button>
                 </div>
             `);
+                setItemOrderAction();
+                setTotalPrice();
                 event.target.value = "";
                 count++;
             });

@@ -53,6 +53,7 @@
                     $status_color = [
                         'dipesan' => 'bg-blue-500 text-white',
                         'DP' => 'bg-yellow-500',
+                        'lunas' => 'bg-green-500',
                         'diproses' => 'bg-orange-500',
                         'dibawa' => 'bg-green-500',
                         'dikembalikan' => 'bg-purple-500 text-white',
@@ -62,9 +63,10 @@
 
                     $status_constraint = [
                         'dipesan' => ['dipesan', 'batal'],
-                        'DP' => ['DP', 'diproses', 'dibawa', 'batal'],
-                        'diproses' => ['diproses', 'dibawa', 'batal'],
-                        'dibawa' => ['dibawa', 'dikembalikan', 'selesai', 'batal'],
+                        'DP' => ['DP', 'batal'],
+                        'lunas' => ['lunas', 'diproses', 'batal'],
+                        'diproses' => ['diproses', 'batal'],
+                        'dibawa' => ['dibawa', 'selesai', 'batal'],
                         'dikembalikan' => ['dikembalikan', 'selesai', 'batal'],
                         'selesai' => ['selesai', 'batal'],
                         'batal' => ['batal'],
@@ -72,7 +74,10 @@
                 @endphp
                 @foreach ($orders as $item)
                     <tr>
-                        <td class="border-b py-1 px-2 w-1 text-center">{{ $item->id }}</td>
+                        <td class="border-b py-1 px-2 w-1 text-center">
+                            {{ $item->id }}
+                            <input type="hidden" name="bukti_dp-{{ $item->id }}" value="{{ $item->bukti_dp }}">
+                        </td>
                         <td class="border-b py-1 px-2 w-1">
                             <form id="update-status-{{ $item->id }}"
                                 action="{{ route('dashboard.order.put-status', $item->id) }}" method="post"
@@ -126,8 +131,9 @@
                                 </button>
                                 <a href="{{ route('dashboard.order.edit', $item->id) }}"
                                     class="bg-light rounded-sm px-3 py-1">
-                                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                        viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2"
                                             d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
@@ -182,7 +188,7 @@
                     </svg>
                 </button>
             </section>
-            <div class="flex flex-col mb-2">
+            <div class="flex flex-col mb-2 gap-2">
                 <h4 class="font-bold">List Item</h4>
                 <p>Siapkan item untuk pemesan</p>
                 <div id="item-list" class="flex flex-wrap gap-2">
@@ -190,6 +196,7 @@
                         X 10
                     </span>
                 </div>
+                <div id="bukti" class="flex flex-wrap gap-2"></div>
             </div>
         </div>
     </div>
@@ -224,6 +231,16 @@
                                 `${item.name} X ${item.qty}`;
                             itemList.appendChild(span);
                         });
+                        const bukti_dp = document.querySelector(`input[name="bukti_dp-${id}"]`);
+                        const bukti = document.getElementById('bukti');
+                        if (bukti_dp.value) {
+                            const span = document.createElement('span');
+                            span.className =
+                                'text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full';
+                            span.innerHTML =
+                                `<a href="/storage/${bukti_dp.value}" target="_blank" class="underline">Bukti DP</a>`;
+                            bukti.appendChild(span);
+                        }
                     });
             }
         }

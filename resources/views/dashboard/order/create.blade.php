@@ -73,7 +73,8 @@
                             @php
                                 $citem = $catalogs->find($itemqty['id']);
                             @endphp
-                            <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                            <div class="item-order text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full"
+                                data-price="{{ $citem->price }}">
                                 <span>{{ $citem->name }} | Rp. {{ number_format($citem->price, 0, '.', ',') }}</span> X
                                 <input type="hidden" name="catalogs[{{ $key }}][id]"
                                     value="{{ $itemqty['id'] }}">
@@ -95,7 +96,7 @@
                     class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     <option value="" disabled selected>Pilih katalog</option>
                     @foreach ($catalogs as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }} | Rp.
+                        <option value="{{ $item->id }}" data-price="{{ $item->price }}">{{ $item->name }} | Rp.
                             {{ number_format($item->price, 0, ',', '.') }}
                         </option>
                     @endforeach
@@ -173,20 +174,60 @@
                     @endif
                 </aside>
             </div>
-            <button type="submit"
-                class="bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Simpan
-                Order</button>
+            <div class="border p-2 rounded-md">
+                <h3 class="text-sm font-bold">Total Order</h3>
+                <h2 id="price" class="text-xl font-black">Rp. 0</h2>
+                <input type="hidden" name="price" id="price-input">
+                <button type="submit"
+                    class="mt-2 bg-blue-500 text-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 w-full">Simpan
+                    Order</button>
+            </div>
         </form>
     </section>
 @endsection
 @section('scripts')
     <script>
         var count = {{ old('catalogs') ? count(old('catalogs')) : 0 }};
+
+        function setTotalPrice() {
+            let totalPrice = 0;
+            const items = document.querySelectorAll('.item-order');
+            items.forEach(item => {
+                const price = parseInt(item.dataset.price);
+                const qty = parseInt(item.querySelector('input[type="number"]').value);
+                if (price && qty) {
+                    totalPrice += price * qty;
+                }
+            });
+            document.querySelector('#price').innerText = "Rp. " + totalPrice.toLocaleString('id-ID');
+            document.querySelector('#price-input').value = totalPrice;
+        }
+        setTotalPrice();
+
+        function setItemOrderAction() {
+            const items = document.querySelectorAll('.item-order');
+            items.forEach(item => {
+                const qtyInput = item.querySelector('input[type="number"]');
+                qtyInput.addEventListener('input', function() {
+                    setTotalPrice();
+                });
+                const qtyButton = item.querySelector('button');
+                qtyButton.addEventListener('click', function() {
+                    setTotalPrice();
+                });
+            });
+        }
+        setItemOrderAction();
+
         document.querySelector('#catalog').addEventListener('change', function(event) {
             const selectedCatalog = event.target.value;
             const selectedCatalogText = event.target.options[event.target.selectedIndex].text;
+            const selectedCatalogPrice = event.target.options[event.target.selectedIndex].dataset.price;
+            if (selectedCatalog == "") {
+                return;
+            }
             document.querySelector("#catalog-list").insertAdjacentHTML('beforeend', `
-                <div class="text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full">
+                <div class="item-order text-sm bg-blue-400 text-white flex items-center gap-2 mt-2 px-3 py-1 rounded-full" data-price="${selectedCatalogPrice}">
                     <span>${selectedCatalogText}</span>
                     <input type="hidden" name="catalogs[${count}][id]" value="${selectedCatalog}"> X
                     <input type="number" name="catalogs[${count}][qty]" class="bg-white text-black px-2 py-1 w-14 rounded-md">
@@ -200,6 +241,8 @@
                     </button>
                 </div>
             `);
+            setItemOrderAction();
+            setTotalPrice();
             event.target.value = "";
             count++;
         });
