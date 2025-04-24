@@ -8,7 +8,7 @@
     </section>
     <section class="flex gap-2">
         @foreach ($galleries as $gallery)
-            <button class="relative flex-grow md:max-w-96"
+            <button class="relative flex-grow md:max-w-fit"
                 onclick="toggleModal('gallery-modal', setGalleryModal({image_url: '{{ $gallery->image_url }}', created_at: '{{ $gallery->created_at }}', title: '{{ $gallery->title }}', description: `{{ $gallery->description }}`}))">
                 <img src="{{ asset('storage/' . $gallery->image_url) }}" alt="{{ $gallery->title }}"
                     class="rounded-lg shadow-md w-full h-64 object-contain">
