@@ -28,6 +28,7 @@
             'Katalog' => route('dashboard.catalog'),
             'Gudang' => route('dashboard.item'),
             'Tipe Item' => route('dashboard.item-type'),
+            'Galeri' => route('dashboard.gallery'),
             'User' => route('dashboard.user'),
         ];
     @endphp

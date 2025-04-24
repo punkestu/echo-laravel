@@ -23,6 +23,7 @@ Route::prefix('auth')->group(function () {
 Route::get('/profile', [App\Http\Controllers\UserController::class, 'user_index'])->middleware('auth')->name('profile');
 Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'user_index'])->middleware(['auth'])->name('cart');
+Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'user_index'])->name('gallery');
 
 Route::group(["prefix" => "/dashboard", "middleware" => [
     'auth',
@@ -61,6 +62,14 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
         Route::get('/edit/{id}', [App\Http\Controllers\ItemTypeController::class, 'edit'])->name('dashboard.item-type.edit');
         Route::post('/update/{id}', [App\Http\Controllers\ItemTypeController::class, 'update'])->name('dashboard.item-type.update');
         Route::get('/delete/{id}', [App\Http\Controllers\ItemTypeController::class, 'destroy'])->name('dashboard.item-type.delete');
+    });
+    Route::prefix("/gallery")->group(function () {
+        Route::get("/", [App\Http\Controllers\GalleryController::class, 'index'])->name('dashboard.gallery');
+        Route::get("/create", [App\Http\Controllers\GalleryController::class, 'create'])->name('dashboard.gallery.create');
+        Route::post("/store", [App\Http\Controllers\GalleryController::class, 'store'])->name('dashboard.gallery.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\GalleryController::class, 'edit'])->name('dashboard.gallery.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\GalleryController::class, 'update'])->name('dashboard.gallery.update');
+        Route::get("/delete/{id}", [App\Http\Controllers\GalleryController::class, 'destroy'])->name('dashboard.gallery.delete');
     });
     Route::prefix("/user")->group(function () {
         Route::get("/", [App\Http\Controllers\UserController::class, 'index'])->name('dashboard.user');
