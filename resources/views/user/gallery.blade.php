@@ -23,7 +23,7 @@
 
     <div id="gallery-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
         <button class="w-screen h-screen bg-black/10 absolute" onclick="closeModal('gallery-modal')"></button>
-        <div class="bg-white rounded-md shadow-lg mx-4 w-96 max-h-[80vh] overflow-y-auto p-6 relative">
+        <div class="bg-white rounded-md shadow-lg mx-4 w-[90vw] md:w-[60vw] lg:w-[35vw] max-h-[80vh] overflow-y-auto p-6 relative">
             <section class="flex justify-end mb-2">
                 <button onclick="closeModal('gallery-modal')">
                     <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -35,7 +35,7 @@
                 </button>
             </section>
             <div class="flex flex-col">
-                <img id="gallery-image" src="" class="w-full aspect-square object-contain rounded-t-lg mb-4">
+                <img id="gallery-image" src="" class="w-full object-contain rounded-t-lg mb-4">
                 <div class="flex justify-end">
                     <p id="gallery-date" class="text-xs"></p>
                 </div>
