@@ -71,6 +71,14 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
         Route::post("/update/{id}", [App\Http\Controllers\GalleryController::class, 'update'])->name('dashboard.gallery.update');
         Route::get("/delete/{id}", [App\Http\Controllers\GalleryController::class, 'destroy'])->name('dashboard.gallery.delete');
     });
+    Route::prefix("/customer")->group(function () {
+        Route::get("/", [App\Http\Controllers\CustomerController::class, 'index'])->name('dashboard.customer');
+        Route::get("/create", [App\Http\Controllers\CustomerController::class, 'create'])->name('dashboard.customer.create');
+        Route::post("/store", [App\Http\Controllers\CustomerController::class, 'store'])->name('dashboard.customer.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\CustomerController::class, 'edit'])->name('dashboard.customer.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\CustomerController::class, 'update'])->name('dashboard.customer.update');
+        Route::get("/delete/{id}", [App\Http\Controllers\CustomerController::class, 'destroy'])->name('dashboard.customer.delete');
+    });
     Route::prefix("/user")->group(function () {
         Route::get("/", [App\Http\Controllers\UserController::class, 'index'])->name('dashboard.user');
     });
