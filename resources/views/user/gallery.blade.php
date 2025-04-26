@@ -6,7 +6,7 @@
             Lihat berbagai koleksi produk yang telah kami buat
         </p>
     </section>
-    <section class="flex gap-2 flex-wrap">
+    <section class="flex justify-center gap-2 flex-wrap">
         @foreach ($galleries as $gallery)
             <button class="relative flex-grow md:max-w-fit"
                 onclick="toggleModal('gallery-modal', setGalleryModal({image_url: '{{ $gallery->image_url }}', created_at: '{{ $gallery->created_at }}', title: '{{ $gallery->title }}', description: `{{ $gallery->description }}`}))">
