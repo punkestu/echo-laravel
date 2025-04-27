@@ -15,22 +15,8 @@ class CatalogController
     {
         $search = request('search');
         $filter_type = request('filter_type');
-        $catalogs = Catalog::with(['catalogItems' => function ($query) {
-            $query->with('item');
-        }]);
-        if ($filter_type) {
-            $catalogs = $catalogs->whereHas('catalogItems.item.itemTypes', function ($query) use ($filter_type) {
-                $query->where('item_types.id', $filter_type);
-            });
-        }
-        if ($search) {
-            $catalogs = $catalogs->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
-            });
-        }
-        $catalogs = $catalogs->get();
-        $itemtypes = ItemType::all();
+        $catalogs = Catalog::get_cached($filter_type, $search);
+        $itemtypes = ItemType::get_cached();
         return view('user.catalog', [
             'catalogs' => $catalogs,
             'itemtypes' => $itemtypes,

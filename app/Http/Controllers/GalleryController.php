@@ -8,7 +8,7 @@ class GalleryController
 {
     public function user_index() {
         // Fetch all galleries from the database order by priority
-        $galleries = \App\Models\Gallery::orderBy('priority', 'desc')->get();
+        $galleries = \App\Models\Gallery::get_cached();
         // Return the view with the galleries data
         return view('user.gallery', compact('galleries'));
     }

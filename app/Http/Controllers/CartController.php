@@ -11,8 +11,7 @@ class CartController
 {
     public function user_index()
     {
-        $user = User::find(Auth::id());
-        $carts = $user->carts()->with(['catalog'])->get();
+        $carts = Cart::get_cached(Auth::id());
         return view('user.cart', [
             'carts' => $carts,
         ]);
@@ -20,17 +19,20 @@ class CartController
 
     public function api_add(Request $request)
     {
-        $user = User::find(Auth::id());
-        $cart = $user->carts()->where('catalog_id', $request->catalog_id)->first();
+        $cart = Cart::where('user_id', Auth::id())->where('catalog_id', $request->catalog_id)->first();
 
         if ($cart) {
             $cart->increment('qty');
         } else {
+            /** @var User $user */
+            $user = Auth::user();
             $user->carts()->create([
                 'catalog_id' => $request->catalog_id,
                 'qty' => $request->qty,
             ]);
         }
+
+        Cart::sync_cache(Auth::id());
 
         return response()->json([
             'status' => true,
@@ -51,6 +53,8 @@ class CartController
                 'message' => 'Berhasil.',
             ]);
         }
+        
+        Cart::sync_cache(Auth::id());
 
         return response()->json([
             'status' => false,

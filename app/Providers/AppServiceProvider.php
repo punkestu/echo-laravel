@@ -24,8 +24,12 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer(['welcome', 'user.*'], function ($view) {
             if (Auth::check()) {
-                $cart = Cart::where('user_id', Auth::id())->get();
-                $cart_count = $cart->count();
+                static $cart_count = null;
+
+                if ($cart_count === null) {
+                    $cart_count = Cart::get_cached(Auth::id())->count();
+                }
+
                 $view->with('cart_count', $cart_count);
             }
         });
