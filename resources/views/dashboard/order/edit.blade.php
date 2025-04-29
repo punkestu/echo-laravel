@@ -266,6 +266,11 @@
                     totalPrice += price * qty;
                 }
             });
+            const jamambil = document.getElementById('jam_ambil').value;
+            const jamkembali = document.getElementById('jam_kembali').value;
+            const durasi = (!jamambil || !jamkembali) ? 1 : (new Date(jamkembali) - new Date(jamambil));
+            const durasiinday = Math.ceil(durasi / (1000 * 60 * 60 * 24));
+            totalPrice = totalPrice * durasiinday;
             const discount = parseInt(document.querySelector('#discount').value);
             document.querySelector('#price').innerText = "Rp. " + (totalPrice - (discount ? discount : 0)).toLocaleString(
                 'id-ID');
