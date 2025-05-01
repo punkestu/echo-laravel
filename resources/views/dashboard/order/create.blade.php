@@ -158,7 +158,7 @@
                     <label for="jam_ambil" class="block text-sm font-medium text-gray-700">Jam Pengambilan</label>
                     <input type="datetime-local" name="jam_ambil" id="jam_ambil"
                         class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value="{{ old('jam_ambil') }}">
+                        value="{{ old('jam_ambil') }}" onchange="setTotalPrice()">
                     @if ($errors->has('jam_ambil'))
                         <p class="text-red-500 text-sm">{{ $errors->first('jam_ambil') }}</p>
                     @endif
@@ -168,7 +168,7 @@
                         Pengembalian</label>
                     <input type="datetime-local" name="jam_kembali" id="jam_kembali"
                         class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value="{{ old('jam_kembali') }}">
+                        value="{{ old('jam_kembali') }}" onchange="setTotalPrice()">
                     @if ($errors->has('jam_kembali'))
                         <p class="text-red-500 text-sm">{{ $errors->first('jam_kembali') }}</p>
                     @endif

@@ -220,7 +220,7 @@
                     <input type="datetime-local" name="jam_ambil" id="jam_ambil"
                         class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         value="{{ old('jam_ambil') ?? $order->jam_ambil }}"
-                        {{ in_array('jam_ambil', $status_disabled) ? 'disabled' : '' }}>
+                        {{ in_array('jam_ambil', $status_disabled) ? 'disabled' : '' }} onchange="setTotalPrice()">
                     @if ($errors->has('jam_ambil'))
                         <p class="text-red-500 text-sm">{{ $errors->first('jam_ambil') }}</p>
                     @endif
@@ -231,7 +231,7 @@
                     <input type="datetime-local" name="jam_kembali" id="jam_kembali"
                         class="px-2 py-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         value="{{ old('jam_kembali') ?? $order->jam_kembali }}"
-                        {{ in_array('jam_kembali', $status_disabled) ? 'disabled' : '' }}>
+                        {{ in_array('jam_kembali', $status_disabled) ? 'disabled' : '' }} onchange="setTotalPrice()">
                     @if ($errors->has('jam_kembali'))
                         <p class="text-red-500 text-sm">{{ $errors->first('jam_kembali') }}</p>
                     @endif
