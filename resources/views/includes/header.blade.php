@@ -1,21 +1,31 @@
-<header class="flex items-center justify-center md:justify-between px-4 py-2 flex-wrap gap-4">
+@php
+    $nav = [
+        'Dashboard' => ['onlyadmin' => true, 'route' => route('dashboard')],
+        'Galeri' => ['route' => route('gallery')],
+        'Destinasi' => ['route' => route('destination')],
+        'Katalog' => ['route' => route('catalog'), 'cart' => auth()->check()],
+    ];
+@endphp
+<header class="flex items-center justify-between px-4 pt-2 gap-4">
     <a href="/">
         <img src="/images/logo/xlcombine.svg" alt="Logo Echo" class="h-12">
     </a>
     <aside class="flex items-center gap-4">
-        @auth
-            @if (auth()->user()->isAdmin())
-                <a href="{{ route('dashboard') }}" class="underline">Dashboard</a>
-            @else
-                <a href="{{ route('gallery') }}" class="underline">Galeri</a>
-                <a href="{{ route('catalog') }}" class="underline flex relative">Katalog
-                    @if (isset($cart_count) && $cart_count > 0)
+        <div class="hidden sm:flex gap-4">
+            @foreach ($nav as $name => $prop)
+                @if ((!auth()->check() || !auth()->user()->isAdmin()) && ($prop['onlyadmin'] ?? false))
+                    @continue
+                @endif
+                <a href="{{ $prop['route'] }}" class="underline relative">{{ $name }}
+                    @if (($prop['cart'] ?? false) && isset($cart_count) && $cart_count > 0)
                         <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
                             {{ $cart_count }}
                         </span>
                     @endif
                 </a>
-            @endif
+            @endforeach
+        </div>
+        @auth
             <a href="{{ route('profile') }}">
                 <svg class="w-10 h-10 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                     height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -26,9 +36,49 @@
             </a>
         @endauth
         @guest
-            <a href="{{ route('gallery') }}" class="underline">Galeri</a>
-            <a href="{{ route('catalog') }}" class="underline">Katalog</a>
             <a href="/#auth" class="bg-light rounded-sm px-3 py-1">Masuk / Daftar</a>
         @endguest
     </aside>
 </header>
+<nav class="flex sm:hidden flex-col items-center pb-2">
+    <div class="flex flex-col gap-2 max-h-0 overflow-hidden duration-500">
+        @foreach ($nav as $name => $prop)
+            @if ((!auth()->check() || !auth()->user()->isAdmin()) && ($prop['onlyadmin'] ?? false))
+                @continue
+            @endif
+            <a href="{{ $prop['route'] }}" class="relative hover:underline">{{ $name }}
+                @if (($prop['cart'] ?? false) && isset($cart_count) && $cart_count > 0)
+                    <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                        {{ $cart_count }}
+                    </span>
+                @endif
+            </a>
+        @endforeach
+    </div>
+    <button onclick="toggleNav(this)" class="w-full flex justify-center mt-1">
+        <svg aria-label="up" class="w-6 h-6 text-gray-800 hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m5 15 7-7 7 7" />
+        </svg>
+        <svg aria-label="down" class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+          </svg>          
+    </button>
+</nav>
+
+<script>
+    function toggleNav(executor) {
+        const nav = document.querySelector('nav > div');
+
+        nav.classList.toggle('max-h-0');
+        nav.classList.toggle('max-h-96');
+        if (nav.classList.contains('max-h-0')) {
+            executor.querySelector("[aria-label='up']").classList.add('hidden');
+            executor.querySelector("[aria-label='down']").classList.remove('hidden');
+        } else {
+            executor.querySelector("[aria-label='up']").classList.remove('hidden');
+            executor.querySelector("[aria-label='down']").classList.add('hidden');
+        }
+    }
+</script>

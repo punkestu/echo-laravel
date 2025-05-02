@@ -24,6 +24,7 @@ Route::get('/profile', [App\Http\Controllers\UserController::class, 'user_index'
 Route::get('/catalog', [App\Http\Controllers\CatalogController::class, 'user_index'])->name('catalog');
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'user_index'])->middleware(['auth'])->name('cart');
 Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'user_index'])->name('gallery');
+Route::get("/destination", [App\Http\Controllers\DestinationController::class, 'user_index'])->name('destination');
 
 Route::group(["prefix" => "/dashboard", "middleware" => [
     'auth',
@@ -70,6 +71,14 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
         Route::get("/edit/{id}", [App\Http\Controllers\GalleryController::class, 'edit'])->name('dashboard.gallery.edit');
         Route::post("/update/{id}", [App\Http\Controllers\GalleryController::class, 'update'])->name('dashboard.gallery.update');
         Route::get("/delete/{id}", [App\Http\Controllers\GalleryController::class, 'destroy'])->name('dashboard.gallery.delete');
+    });
+    Route::prefix("/destination")->group(function () {
+        Route::get("/", [App\Http\Controllers\DestinationController::class, 'index'])->name('dashboard.destination');
+        Route::get("/create", [App\Http\Controllers\DestinationController::class, 'create'])->name('dashboard.destination.create');
+        Route::post("/store", [App\Http\Controllers\DestinationController::class, 'store'])->name('dashboard.destination.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\DestinationController::class, 'edit'])->name('dashboard.destination.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\DestinationController::class, 'update'])->name('dashboard.destination.update');
+        Route::get("/delete/{id}", [App\Http\Controllers\DestinationController::class, 'destroy'])->name('dashboard.destination.delete');
     });
     Route::prefix("/customer")->group(function () {
         Route::get("/", [App\Http\Controllers\CustomerController::class, 'index'])->name('dashboard.customer');

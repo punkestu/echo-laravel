@@ -29,6 +29,7 @@
             'Gudang' => route('dashboard.item'),
             'Tipe Item' => route('dashboard.item-type'),
             'Galeri' => route('dashboard.gallery'),
+            'Destinasi' => route('dashboard.destination'),
             'Pelanggan' => route('dashboard.customer'),
             'User' => route('dashboard.user'),
         ];
