@@ -186,4 +186,15 @@ class DiscountController
             'message' => 'Berhasil menghapus diskon.',
         ]);
     }
+
+    public function useDiscount($id)
+    {
+        $discount = \App\Models\Discount::findOrFail($id);
+        $discount->update(['used' => true]);
+
+        return redirect()->route('dashboard.discount')->with('alert', [
+            'type' => 'success',
+            'message' => 'Berhasil menggunakan diskon.',
+        ]);
+    }
 }
