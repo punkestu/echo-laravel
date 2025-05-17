@@ -9,7 +9,17 @@ class DiscountController
     public function index()
     {
         $search = request('search');
-        $discounts = \App\Models\Discount::with(['user', 'customer'])->get();
+        $discounts = \App\Models\Discount::with(['user', 'customer']);
+        if ($search) {
+            $discounts->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")->orWhere('nohp', 'like', "%$search%");
+                })->orWhereHas('customer', function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")->orWhere('phone', 'like', "%$search%");
+                });
+            });
+        }
+        $discounts = $discounts->orderBy('created_at', 'desc')->get();
         return view('dashboard.discount.index', [
             'discounts' => $discounts,
             'search' => $search,
