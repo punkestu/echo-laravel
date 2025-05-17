@@ -45,7 +45,7 @@ class UserController
 
     public function api_getUsers(Request $request)
     {
-        $users = \App\Models\User::with([]);
+        $users = \App\Models\User::with(["discounts"]);
         $search = $request->input('search');
         if ($search) {
             $users = $users->where('name', 'like', "%{$search}%")

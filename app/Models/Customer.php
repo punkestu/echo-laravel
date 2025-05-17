@@ -40,4 +40,9 @@ class Customer extends Model
 
         return $nohp;
     }
+
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class)->where('used', 0);
+    }
 }

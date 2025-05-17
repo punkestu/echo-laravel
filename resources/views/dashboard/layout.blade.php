@@ -30,6 +30,7 @@
             'Tipe Item' => route('dashboard.item-type'),
             'Galeri' => route('dashboard.gallery'),
             'Destinasi' => route('dashboard.destination'),
+            'Diskon' => route('dashboard.discount'),
             'Pelanggan' => route('dashboard.customer'),
             'User' => route('dashboard.user'),
         ];

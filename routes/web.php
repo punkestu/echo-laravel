@@ -31,6 +31,14 @@ Route::group(["prefix" => "/dashboard", "middleware" => [
     'admin'
 ]], function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'route'])->name('dashboard');
+    Route::prefix("/discount")->group(function () {
+        Route::get("/", [App\Http\Controllers\DiscountController::class, 'index'])->name('dashboard.discount');
+        Route::get("/create", [App\Http\Controllers\DiscountController::class, 'create'])->name('dashboard.discount.create');
+        Route::post("/store", [App\Http\Controllers\DiscountController::class, 'store'])->name('dashboard.discount.store');
+        Route::get("/edit/{id}", [App\Http\Controllers\DiscountController::class, 'edit'])->name('dashboard.discount.edit');
+        Route::post("/update/{id}", [App\Http\Controllers\DiscountController::class, 'update'])->name('dashboard.discount.update');
+        Route::get("/delete/{id}", [App\Http\Controllers\DiscountController::class, 'destroy'])->name('dashboard.discount.delete');
+    });
     Route::prefix("/order")->group(function () {
         Route::get("/", [App\Http\Controllers\OrderController::class, 'index'])->name('dashboard.order');
         Route::get("/create", [App\Http\Controllers\OrderController::class, 'create'])->name('dashboard.order.create');

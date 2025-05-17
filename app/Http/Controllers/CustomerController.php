@@ -10,9 +10,13 @@ class CustomerController
     {
         $name = $request->input('name');
         $phone = $request->input('phone');
+        $search = $request->input('search');
 
-        $customers = \App\Models\Customer::with([]);
-        if ($name) {
+        $customers = \App\Models\Customer::with(["discounts"]);
+        if ($search) {
+            $customers = $customers->where('name', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%");
+        } else if ($name) {
             $customers = $customers->where('name', 'like', '%' . $name . '%');
         } else if ($phone) {
             $customers = $customers->where('phone', 'like', '%' . $phone . '%');

@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class)->sum('price');
     }
+
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class)->where('used', 0);
+    }
 }
